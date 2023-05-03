@@ -59,17 +59,17 @@ void loop()
     }
     
     // call functie afhankelijk van input
-    if (forwardState && !backwardState && !leftState && !rightState) {
+    if (fState && !bState && !lState && !rState) {
       forward();
-    } else if (backwardState && !forwardState && !leftState && !rightState) {
+    } else if (bState && !fState && !lState && !rState) {
       backward();
-    } else if (leftState && !rightState) {
+    } else if (lState && !rState) {
       left();
-    } else if (rightState && !leftState) {
+    } else if (rState && !lState) {
       right();
-    } else if (leftState && backwardState && !rightState && !forwardState) {
+    } else if (lState && bState && !rState && !fState) {
       bLeft();
-    } else if (rightState && backwardState && !leftState && !forwardState) {
+    } else if (rState && bState && !lState && !fState) {
       bRight();
     } else { // stop als er geen input is
       stop();
