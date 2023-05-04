@@ -78,36 +78,29 @@ void loop()
 }
 
 void forward() {
-  motors.setLeftSpeed(200);
-  motors.setRightSpeed(200);
+  motors.setSpeeds(200, 200);
 }
 
 void backward() {
-  motors.setLeftSpeed(-200);
-  motors.setRightSpeed(-200);
+  motors.setSpeeds(-200, -200);
 }
 
 void left() {
-  motors.setLeftSpeed(50);
-  motors.setRightSpeed(200);
+  motors.setSpeeds(50, 200)
 }
 
 void right() {
-  motors.setLeftSpeed(200);
-  motors.setRightSpeed(50);
+  motors.setSpeeds(200, 50);
 }
 
 void bLeft() {
-  motors.setLeftSpeed(-50);
-  motors.setRightSpeed(-200);
+  motors.setSpeeds(-50, -200);
 }
 
 void bRight() {
-  motors.setLeftSpeed(-200);
-  motors.setRightSpeed(-50);
+  motors.setSpeeds(-200, -50);
 }
 
 void stop() {
-  motors.setLeftSpeed(0);
-  motors.setRightSpeed(0);
+  motors.setSpeeds(0, 0);
 }
