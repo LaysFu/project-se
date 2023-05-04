@@ -28,6 +28,7 @@ void loop()
     switch (input) {
       case 'w': // forward
         fState = true;
+        Serial.println("forward");
         break;
       case 's': // backward
         bState = true;
@@ -40,6 +41,7 @@ void loop()
         break;
       case 'rw': // forward release
         fState = false;
+        Serial.println("forward release");
         break;
       case 'rs': // backward release
         bState = false;
@@ -59,9 +61,9 @@ void loop()
     }
     
     // call functie afhankelijk van input
-    if (fState && !bState && !lState && !rState) {
+    if (fState) {
       forward();
-    } else if (bState && !fState && !lState && !rState) {
+    } else if (bState) {
       backward();
     } else if (lState && !rState) {
       left();
@@ -86,7 +88,7 @@ void backward() {
 }
 
 void left() {
-  motors.setSpeeds(50, 200)
+  motors.setSpeeds(50, 200);
 }
 
 void right() {
