@@ -16,8 +16,7 @@ void setup()
   buzzer.stopPlaying();
 }
 
-void loop()
-{ 
+void loop(){ 
   if (Serial.available() > 0) {
     char input = Serial.read(); // read input character from serial port
     switch (input) {
@@ -27,21 +26,26 @@ void loop()
       case 's': // backward
         backward();
         break;
-      case 'a': // left
+      case '1': // forward left
         left();
         break;
-      case 'd': // right
+      case '2': // forward right
         right();
         break;
+      case '3': // backward right
+        bRight();
+        break;
+      case '4': // backward left
+        bLeft();
+        break;
       case 'f': // play music
-        buzzer.playFromProgramSpace(crabRave);
-        break;
+            buzzer.playFromProgramSpace(crabRave);
+            break;
       case 'e': // stop music
-        buzzer.stopPlaying();
-        break;
-      default: // stop if invalid input received
-        stop();
-        break;
+            buzzer.stopPlaying();
+            break;
+      default: 
+            stop();
     }
   }
 }
@@ -55,11 +59,19 @@ void backward() {
 }
 
 void left() {
-  motors.setSpeeds(-100, 100)
+  motors.setSpeeds(50, 300);
 }
 
 void right() {
-  motors.setSpeeds(100, -100);
+  motors.setSpeeds(300, 50);
+}
+
+void bLeft() {
+  motors.setSpeeds(-50, -300);
+}
+
+void bRight() {
+  motors.setSpeeds(-300, -50);
 }
 
 void stop() {
