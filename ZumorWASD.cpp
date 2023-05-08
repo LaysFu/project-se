@@ -4,7 +4,7 @@
 Zumo32U4Buzzer buzzer;
 Zumo32U4Motors motors;
 
-const char crabRave[] PROGMEM =
+const char crabRave[] PROGMEM = // load crab rave song into program space
   "! V10 O5 L8 T125 db-gg16dd16aff16dd16aff16ccee16f16e16"
   "db-gg16dd16aff16dd16aff16ccee16f16e16"
   "db-gg16dd16aff16dd16aff16ccee16f16e16"
