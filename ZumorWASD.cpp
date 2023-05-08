@@ -16,41 +16,27 @@ void setup()
   buzzer.stopPlaying();
 }
 
-bool fState = false; // forward
-bool bState = false; // backward
-bool lState = false; // left
-bool rState = false; // right
-
-void loop()
-{ 
+void loop(){ 
   if (Serial.available() > 0) {
     char input = Serial.read(); // read input character from serial port
     switch (input) {
       case 'w': // forward
-        fState = true;
-        Serial.println("forward");
+        forward();
         break;
       case 's': // backward
-        bState = true;
+        backward();
         break;
-      case 'a': // left
-        lState = true;
+      case '1': // forward left
+        left();
         break;
-      case 'd': // right
-        rState = true;
+      case '2': // forward right
+        right();
         break;
-      case 'rw': // forward release
-        fState = false;
-        Serial.println("forward release");
+      case '3': // backward right
+        bRight();
         break;
-      case 'rs': // backward release
-        bState = false;
-        break;
-      case 'ra': // left release
-        lState = false;
-        break;
-      case 'rd': // right release
-        rState = false;
+      case '4': // backward left
+        bLeft();
         break;
       case 'f': // play music
             buzzer.playFromProgramSpace(crabRave);
@@ -58,23 +44,8 @@ void loop()
       case 'e': // stop music
             buzzer.stopPlaying();
             break;
-    }
-    
-    // call functie afhankelijk van input
-    if (fState) {
-      forward();
-    } else if (bState) {
-      backward();
-    } else if (lState && !rState) {
-      left();
-    } else if (rState && !lState) {
-      right();
-    } else if (lState && bState && !rState && !fState) {
-      bLeft();
-    } else if (rState && bState && !lState && !fState) {
-      bRight();
-    } else { // stop als er geen input is
-      stop();
+      default: 
+            stop();
     }
   }
 }
@@ -88,19 +59,19 @@ void backward() {
 }
 
 void left() {
-  motors.setSpeeds(50, 200);
+  motors.setSpeeds(50, 300);
 }
 
 void right() {
-  motors.setSpeeds(200, 50);
+  motors.setSpeeds(300, 50);
 }
 
 void bLeft() {
-  motors.setSpeeds(-50, -200);
+  motors.setSpeeds(-50, -300);
 }
 
 void bRight() {
-  motors.setSpeeds(-200, -50);
+  motors.setSpeeds(-300, -50);
 }
 
 void stop() {
