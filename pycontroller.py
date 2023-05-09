@@ -1,7 +1,7 @@
 import serial
 import keyboard
 
-ser = serial.Serial('COM8', 9600) # serial connection, verander COM8 naar de juiste poort
+ser = serial.Serial('COM7', 9600) # serial connection, verander COM8 naar de juiste poort
 
 while True:
     if keyboard.is_pressed('d') and not (keyboard.is_pressed('a')):
@@ -15,6 +15,11 @@ while True:
             while keyboard.is_pressed('d') and keyboard.is_pressed('w') and not (keyboard.is_pressed('a')):
                 pass
             ser.write(b' ')
+        else:
+            ser.write(b'r')
+            while keyboard.is_pressed('d') and not (keyboard.is_pressed('a') or keyboard.is_pressed('w') or keyboard.is_pressed('s')):
+                pass
+            ser.write(b' ')
     elif keyboard.is_pressed('a') and not (keyboard.is_pressed('d')):
         if keyboard.is_pressed('s'):
             ser.write(b'4')
@@ -24,6 +29,11 @@ while True:
         elif keyboard.is_pressed('w'):
             ser.write(b'1')
             while keyboard.is_pressed('a') and keyboard.is_pressed('w') and not (keyboard.is_pressed('d')):
+                pass
+            ser.write(b' ')
+        else:
+            ser.write(b'l')
+            while keyboard.is_pressed('a') and not (keyboard.is_pressed('d') or keyboard.is_pressed('w') or keyboard.is_pressed('s')):
                 pass
             ser.write(b' ')
     elif keyboard.is_pressed('w') and not (keyboard.is_pressed('s')):

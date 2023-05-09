@@ -38,6 +38,12 @@ void loop(){
       case '4': // backward left
         bLeft();
         break;
+      case 'r': // spin right
+        spinRight();
+        break;
+      case 'l': // spin left
+        spinLeft();
+        break;
       case 'f': // play music
             buzzer.playFromProgramSpace(crabRave);
             break;
@@ -72,6 +78,14 @@ void bLeft() {
 
 void bRight() {
   motors.setSpeeds(-300, -50);
+}
+
+void spinRight() {
+  motors.setSpeeds(100, -100);
+}
+
+void spinLeft() {
+  motors.setSpeeds(-100, 100);
 }
 
 void stop() {
