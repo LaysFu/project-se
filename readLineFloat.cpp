@@ -58,7 +58,7 @@ void loop() {
   String color2 = mapSensorValuesToColor(normalizeSensorValue(lineSensorValues[1]), normalizeSensorValue(lineSensorValues[2]), normalizeSensorValue(lineSensorValues[3]));
   
   // Print the detected colors
-  Serial.print("Sensor 1: ");
+  Serial.print("Sensor 1 and 5: ");
   Serial.println(color1);
   Serial.print("Sensor 2, 3, and 4: ");
   Serial.println(color2);
