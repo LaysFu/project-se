@@ -35,11 +35,11 @@ const int rightGrayMax = 420;
 const int rightBlackMin = 700;
 const int rightBlackMax = 2000;
 
-LineSensorColors::LineSensorColors(const uint16_t* sensorValues) {
+readLine::LineSensorColors(const uint16_t* sensorValues) {
   lineSensorValues = sensorValues;
 }
 
-String LineSensorColors::getColor1() {
+String readLine::getColor1() {
   if (lineSensorValues[0] >= leftWhiteMin && lineSensorValues[0] <= leftWhiteMax) {
     return "White";
   } else if (lineSensorValues[0] >= leftBrownMin && lineSensorValues[0] <= leftBrownMax) {
@@ -53,7 +53,7 @@ String LineSensorColors::getColor1() {
   }
 }
 
-String LineSensorColors::getColor2() {
+String readLine::getColor2() {
   if (lineSensorValues[1] >= midOutWhiteMin && lineSensorValues[1] <= midOutWhiteMax) {
     return "White";
   } else if (lineSensorValues[1] >= midOutBlackMin && lineSensorValues[1] <= midOutBlackMax) {
@@ -65,7 +65,7 @@ String LineSensorColors::getColor2() {
   }
 }
 
-String LineSensorColors::getColor3() {
+String readLine::getColor3() {
   if (lineSensorValues[2] >= middleWhiteMin && lineSensorValues[2] <= middleWhiteMax) {
     return "White";
   } else if (lineSensorValues[2] >= middleBlackMin && lineSensorValues[2] <= middleBlackMax) {
@@ -77,7 +77,7 @@ String LineSensorColors::getColor3() {
   }
 }
 
-String LineSensorColors::getColor4() {
+String readLine::getColor4() {
   if (lineSensorValues[3] >= midOutWhiteMin && lineSensorValues[3] <= midOutWhiteMax) {
     return "White";
   } else if (lineSensorValues[3] >= midOutBlackMin && lineSensorValues[3] <= midOutBlackMax) {
@@ -89,7 +89,7 @@ String LineSensorColors::getColor4() {
   }
 }
 
-String LineSensorColors::getColor5() {
+String readLine::getColor5() {
   if (lineSensorValues[4] >= rightWhiteMin && lineSensorValues[4] <= rightWhiteMax) {
     return "White";
   } else if (lineSensorValues[4] >= rightBrownMin && lineSensorValues[4] <= rightBrownMax) {

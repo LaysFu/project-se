@@ -1,4 +1,3 @@
-#include <iostream>
 #include "Zumo32U4ProximitySensors.h"
 #include "Zumo32U4LineSensors.h"
 #include "Zumo32U4Motors.h"

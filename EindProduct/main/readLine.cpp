@@ -2,24 +2,16 @@
 #include "readLine.h"
 #include "Zumo32U4.h"
 
-Zumo32U4LineSensors lineSensors;
 Zumo32U4Motors motors;
-Zumo32U4ButtonA buttonA;
+Zumo32U4LineSensors lineSensors;
 
 const int numSensors = 5;
-
-void setup() {
-  Serial.begin(9600);
-  lineSensors.initFiveSensors();
-  buttonA.waitForButton();
-  calibrateLineSensors();
-}
-
-void loop() {
+  
+void readLine::identifyColor() {
   uint16_t lineSensorValues[numSensors];
   lineSensors.read(lineSensorValues);
 
-  LineSensorColors lineSensorColors(lineSensorValues);
+  readLine lineSensorColors(lineSensorValues);
 
   Serial.print("Sensor Left: ");
   Serial.println(lineSensorColors.getColor1());
@@ -35,7 +27,7 @@ void loop() {
   delay(1000);
 }
 
-void calibrateLineSensors() {
+void readLine::calibrateLineSensors() {
   delay(1000);
   for (uint16_t i = 0; i < 120; i++) {
     if (i > 30 && i <= 90) {
