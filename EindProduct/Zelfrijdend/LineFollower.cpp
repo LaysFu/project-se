@@ -6,6 +6,8 @@ void LineFollower::followLine() {
   bool turnLeft = false;
   bool turnRight = false;
 
+  gyro.init(); // Initialize gyro
+
   while (true) {
     Color lineSensorValues[3];
     readline.readLine(lineSensorValues); // Update sensor color values
@@ -73,7 +75,7 @@ bool LineFollower::isGrayLinesDetected(Color lineSensorValues[3]) {
 }
 
 bool LineFollower::isPitchBelowZero() {
-  double pitch = gyro.getPitch();
+  double pitch = gyro.calculatePitch();
   return (pitch < 0);
 }
 
