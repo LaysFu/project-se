@@ -1,41 +1,53 @@
-#include "LineSensorColors.h"
+#include "readLine.h"
 
-const int numSensors = 5;
 const int sensorMinValue = 0;
 const int sensorMaxValue = 2000;
 
 const int middleWhiteMin = 0;
 const int middleWhiteMax = 130;
 const int middleBlackMin = 600;
-const int middleBlackMax = 900;
+const int middleBlackMax = 2000;
 const int middleGreenMin = 140;
 const int middleGreenMax = 280;
 
 const int midOutWhiteMin = 70;
 const int midOutWhiteMax = 130;
 const int midOutBlackMin = 230;
-const int midOutBlackMax = 330;
+const int midOutBlackMax = 2000;
 const int midOutGreenMin = 130;
 const int midOutGreenMax = 230;
 
-const int outerWhiteMin = 80;
-const int outerWhiteMax = 180;
-const int outerBrownMin = 540;
-const int outerBrownMax = 800;
-const int outerGrayMin = 300;
-const int outerGrayMax = 524;
+const int leftWhiteMin = 80;
+const int leftWhiteMax = 200;
+const int leftBrownMin = 520;
+const int leftBrownMax = 700;
+const int leftGrayMin = 210;
+const int leftGrayMax = 520;
+const int leftBlackMin = 700;
+const int leftBlackMax = 2000;
+
+const int rightWhiteMin = 80;
+const int rightWhiteMax = 200;
+const int rightBrownMin = 420;
+const int rightBrownMax = 700;
+const int rightGrayMin = 210;
+const int rightGrayMax = 420;
+const int rightBlackMin = 700;
+const int rightBlackMax = 2000;
 
 LineSensorColors::LineSensorColors(const uint16_t* sensorValues) {
   lineSensorValues = sensorValues;
 }
 
 String LineSensorColors::getColor1() {
-  if (lineSensorValues[0] >= outerWhiteMin && lineSensorValues[0] <= outerWhiteMax) {
+  if (lineSensorValues[0] >= leftWhiteMin && lineSensorValues[0] <= leftWhiteMax) {
     return "White";
-  } else if (lineSensorValues[0] >= outerBrownMin && lineSensorValues[0] <= outerBrownMax) {
+  } else if (lineSensorValues[0] >= leftBrownMin && lineSensorValues[0] <= leftBrownMax) {
     return "Brown";
-  } else if (lineSensorValues[0] >= outerGrayMin && lineSensorValues[0] <= outerGrayMax) {
+  } else if (lineSensorValues[0] >= leftGrayMin && lineSensorValues[0] <= leftGrayMax) {
     return "Gray";
+  } else if (lineSensorValues[0] >= leftBlackMin && lineSensorValues[0] <= leftBlackMax) {
+    return "Black";
   } else {
     return "Unknown";
   }
@@ -78,12 +90,14 @@ String LineSensorColors::getColor4() {
 }
 
 String LineSensorColors::getColor5() {
-  if (lineSensorValues[4] >= outerWhiteMin && lineSensorValues[4] <= outerWhiteMax) {
+  if (lineSensorValues[4] >= rightWhiteMin && lineSensorValues[4] <= rightWhiteMax) {
     return "White";
-  } else if (lineSensorValues[4] >= outerBrownMin && lineSensorValues[4] <= outerBrownMax) {
+  } else if (lineSensorValues[4] >= rightBrownMin && lineSensorValues[4] <= rightBrownMax) {
     return "Brown";
-  } else if (lineSensorValues[4] >= outerGrayMin && lineSensorValues[4] <= outerGrayMax) {
+  } else if (lineSensorValues[4] >= rightGrayMin && lineSensorValues[4] <= rightGrayMax) {
     return "Gray";
+  } else if (lineSensorValues[4] >= rightBlackMin && lineSensorValues[4] <= rightBlackMax) {
+    return "Black";
   } else {
     return "Unknown";
   }

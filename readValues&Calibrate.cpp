@@ -37,7 +37,7 @@ void loop()
     Serial.println(lineSensorValues[i]);
   }
 
-  delay(3000);  // Adjust the delay as per your requirements
+  delay(1000);  // Adjust the delay as per your requirements
 }
 
 void calibrateLineSensors()
