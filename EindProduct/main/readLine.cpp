@@ -5,13 +5,26 @@
 Zumo32U4Motors motors;
 Zumo32U4LineSensors lineSensors;
 
+String sensorColors[5]; // 5 sensors
+
+readLine::readLine(int sensorValues) {
+  lineSensorValues = sensorValues;
+}
+
 const int numSensors = 5;
   
 void readLine::identifyColor() {
-  uint16_t lineSensorValues[numSensors];
+
+  int lineSensorValues[numSensors];
   lineSensors.read(lineSensorValues);
 
-  readLine lineSensorColors(lineSensorValues);
+  lineSensorColors(lineSensorValues);
+
+  sensorColors[0] = lineSensorColors.getColor1();
+  sensorColors[1] = lineSensorColors.getColor2();
+  sensorColors[2] = lineSensorColors.getColor3();
+  sensorColors[3] = lineSensorColors.getColor4();
+  sensorColors[4] = lineSensorColors.getColor5();
 
   Serial.print("Sensor Left: ");
   Serial.println(lineSensorColors.getColor1());
@@ -38,4 +51,8 @@ void readLine::calibrateLineSensors() {
     lineSensors.calibrate();
   }
   motors.setSpeeds(0, 0);
+}
+
+String* readLine::getSensorColors() {
+  return sensorColors;
 }

@@ -5,13 +5,15 @@
 #include "readLine.h"
 
 Zumo32U4LineSensors lineSensors;
+Zumo32U4ButtonA buttonA;
+readLine lineread;
 
 void setup()
 {
     Serial.begin(9600);
     lineSensors.initFiveSensors();
     buttonA.waitForButton();
-    readLine.calibrateLineSensors();
+    lineread.calibrateLineSensors();
 } 
 
 void loop()

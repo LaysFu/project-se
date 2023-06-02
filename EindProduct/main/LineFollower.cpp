@@ -9,26 +9,26 @@ void LineFollower::followLine() {
   gyro.init(); // Initialize gyro
 
   while (true) {
-    Color lineSensorValues[5];
-    readline.readLine(lineSensorValues); // Update sensor color values
+    readline.identifyColor();
+    String* sensorColors = readline.getSensorColors(); // Update sensor color values
 
-    if (isBrownLineDetected(lineSensorValues)) {
-      block.switchMode(); // Switch naar block mode
-      break;
-    }
+    // if (isBrownLineDetected(sensorColors)) {
+    //   block.switchMode(); // Switch naar block mode
+    //   break;
+    // }
 
-    if (isGrayLinesDetected(lineSensorValues)) {
-      pauseMovement = true; // pause until pitch is below zero
+    if (isGrayLinesDetected(sensorColors)) {
+      pause = true; // pause until pitch is below zero
       continue;
-    } else if (lineSensorValues[0] == Color::Gray) {
+    } else if (sensorColors[0] == "Gray") {
       turnLeft = true; // turn left on next black line
-    } else if (lineSensorValues[4] == Color::Gray) {
+    } else if (sensorColors[4] == "Gray") {
       turnRight = true; // turn right on next black line
     }
 
-    if (pauseMovement) {
+    if (pause) {
       if (isPitchBelowZero()) {
-        pauseMovement = false;
+        pause = false;
       } else {
         pauseMovement();
         continue;
@@ -36,20 +36,20 @@ void LineFollower::followLine() {
     }
 
     if (turnLeft) {
-      if (lineSensorValues[0] == Color::Black) {
+      if (sensorColors[0] == "Black") {
         turnLeft();
         turnLeft = false;
       }
     } else if (turnRight) {
-      if (lineSensorValues[4] == Color::Black) {
+      if (sensorColors[4] == "Black") {
         turnRight();
         turnRight = false;
       }
     }
 
-    updateOnGreenLine(lineSensorValues);
+    updateOnGreenLine(sensorColors);
 
-    int position = calculateLinePosition(lineSensorValues);
+    int position = calculateLinePosition(sensorColors);
 
     int error = position - 2000;
 
@@ -66,12 +66,12 @@ void LineFollower::followLine() {
   }
 }
 
-bool LineFollower::isBrownLineDetected(Color lineSensorValues[5]) {
-  return (lineSensorValues[0] == Color::Brown || lineSensorValues[4] == Color::Brown);
+bool LineFollower::isBrownLineDetected(sensorColors) {
+  return (sensorColors[0] == "Brown" || sensorColors[4] == "Brown");
 }
 
-bool LineFollower::isGrayLinesDetected(Color lineSensorValues[5]) {
-  return (lineSensorValues[0] == Color::Gray && lineSensorValues[4] == Color::Gray);
+bool LineFollower::isGrayLinesDetected(sensorColors) {
+  return (sensorColors[0] == "Gray" && sensorColors[4] == "Gray");
 }
 
 bool LineFollower::isPitchBelowZero() {
@@ -95,15 +95,15 @@ void LineFollower::turnRight() {
   delay(200);
 }
 
-void LineFollower::updateOnGreenLine(Color lineSensorValues[5]) {
-  onGreenLine = (lineSensorValues[2] == Color::Green);
+void LineFollower::updateOnGreenLine(sensorColors) {
+  onGreenLine = (sensorColors[2] == "Green");
 }
 
-int LineFollower::calculateLinePosition(Color lineSensorValues[5]) {
+int LineFollower::calculateLinePosition(sensorColors) {
   int position = 0;
   int count = 0;
   for (int i = 0; i < 3; i++) {
-    if (lineSensorValues[i] == getColor()) {
+    if (sensorColors[i] == getColor()) {
       position += i * 1000;
       count++;
     }
@@ -117,7 +117,7 @@ int LineFollower::calculateLinePosition(Color lineSensorValues[5]) {
 }
 
 void LineFollower::getColor() {
-  return (onGreenLine ? Color::Green : Color::Black);
+  return (onGreenLine ? "Green" : "Black");
 }
 
 int LineFollower::calculateSpeedDifference(int error) {
