@@ -13,6 +13,12 @@ void readLine::identifyColor() {
 
   readLine lineSensorColors(lineSensorValues);
 
+  color1 = lineSensorColors.getColor1();
+  color2 = lineSensorColors.getColor2();
+  color3 = lineSensorColors.getColor3();
+  color4 = lineSensorColors.getColor4();
+  color5 = lineSensorColors.getColor5();
+
   Serial.print("Sensor Left: ");
   Serial.println(lineSensorColors.getColor1());
   Serial.print("Sensor MidL: ");
