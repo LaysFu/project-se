@@ -15,6 +15,11 @@ public:
   String getColor3();
   String getColor4();
   String getColor5();
+  String color1;
+  String color2;
+  String color3;
+  String color4;
+  String color5;
   void calibrateLineSensors();
   void identifyColor();
 };
