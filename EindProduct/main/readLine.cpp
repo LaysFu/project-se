@@ -6,7 +6,10 @@ Zumo32U4Motors motors;
 Zumo32U4LineSensors lineSensors;
 
 const int numSensors = 5;
-  
+
+readLine::readLine() {lineSensors.initFiveSensors();}
+readLine::readLine(uint16_t i) {lineSensors.initFiveSensors();}
+
 void readLine::identifyColor() {
   uint16_t lineSensorValues[numSensors];
   lineSensors.read(lineSensorValues);

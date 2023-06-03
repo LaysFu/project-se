@@ -14,22 +14,24 @@ private:
   Block block;
   const int maxSpeed = 400;
   bool onGreenLine = false;
-  bool pauseMovement = false;
+  bool pause = false;
   int lastError = 0;
+  int leftSpeed = 0;
+  int rightSpeed = 0;
 
 public:
-  void followLine();
+  void followLine(readLine&);
 
 private:
-  bool isBrownLineDetected(Color lineSensorValues[5]);
-  bool isGrayLinesDetected(Color lineSensorValues[5]);
+  bool isBrownLineDetected(readLine&);
+  bool isGrayLinesDetected(readLine&);
   bool isPitchBelowZero();
   void pauseMovement();
   void turnLeft();
   void turnRight();
-  void updateOnGreenLine(Color lineSensorValues[5]);
-  int calculateLinePosition(Color lineSensorValues[5]);
-  void getColor();
+  void updateOnGreenLine(readLine&);
+  int calculateLinePosition(readLine&);
+  String getColor();
   int calculateSpeedDifference(int error);
   void setMotorSpeeds(int leftSpeed, int rightSpeed);
 };

@@ -35,7 +35,7 @@ const int rightGrayMax = 420;
 const int rightBlackMin = 700;
 const int rightBlackMax = 2000;
 
-readLine::LineSensorColors(const uint16_t* sensorValues) {
+void readLine::LineSensorColors(const uint16_t* sensorValues) {
   lineSensorValues = sensorValues;
 }
 

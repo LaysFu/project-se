@@ -4,18 +4,19 @@
 #include <Wire.h>
 #include "readLine.h"
 
-Zumo32U4LineSensors lineSensors;
+Zumo32U4ButtonA buttonA;
+readLine lineread;
+LineFollower lf;
 
 void setup()
 {
     Serial.begin(9600);
-    lineSensors.initFiveSensors();
-    buttonA.waitForButton();
-    readLine.calibrateLineSensors();
+    Serial.println("Hello world!");
+
+    //lineread.calibrateLineSensors();
 } 
 
 void loop()
-{
-    LineFollower lineFollower;
-    lineFollower.followLine();
+{;
+    //lf.followLine(lineread);
 }

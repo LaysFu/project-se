@@ -9,7 +9,9 @@ private:
   const uint16_t* lineSensorValues;
   
 public:
-  LineSensorColors(const uint16_t* sensorValues);
+  readLine();
+  readLine(uint16_t);
+  void LineSensorColors(const uint16_t* sensorValues);
   String getColor1();
   String getColor2();
   String getColor3();
