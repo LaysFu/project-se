@@ -1,50 +1,153 @@
-#include <Arduino.h>
 #include "readLine.h"
-#include "Zumo32U4.h"
 
-Zumo32U4Motors motors;
-Zumo32U4LineSensors lineSensors;
-
-const int numSensors = 5;
-
-readLine::readLine() {lineSensors.initFiveSensors();}
-readLine::readLine(uint16_t i) {lineSensors.initFiveSensors();}
+readLine::readLine() {
+  lineSensors.initFiveSensors();
+  calibrateLineSensors();
+}
 
 void readLine::identifyColor() {
-  uint16_t lineSensorValues[numSensors];
-  lineSensors.read(lineSensorValues);
+  int16_t position = lineSensors.readLine(lineSensorValues);
 
-  readLine lineSensorColors(lineSensorValues);
-
-  color1 = lineSensorColors.getColor1();
-  color2 = lineSensorColors.getColor2();
-  color3 = lineSensorColors.getColor3();
-  color4 = lineSensorColors.getColor4();
-  color5 = lineSensorColors.getColor5();
+  for (int i = 0; i < NUM_SENSORS; i++){
+    switch(i){
+      case 0:
+        color0 = getSideColor(i); 
+        break;
+      case 1:
+        color1 = getMidColor(i); 
+        break;
+      case 2: 
+        color2 = getMidColor(i); 
+        break;
+      case 3:
+        color3 = getMidColor(i); 
+        break;
+      case 4: 
+        color4 = getSideColor(i); 
+        break;
+    }
+  }
+  // color1 = getColor1();
+  // color2 = getColor2();
+  // color3 = getColor3();
+  // color4 = getColor4();
+  // color5 = getColor5();
 
   Serial.print("Sensor Left: ");
-  Serial.println(lineSensorColors.getColor1());
+  Serial.println(color0);
   Serial.print("Sensor MidL: ");
-  Serial.println(lineSensorColors.getColor2());
+  Serial.println(color1);
   Serial.print("Sensor Mid: ");
-  Serial.println(lineSensorColors.getColor3());
+  Serial.println(color2);
   Serial.print("Sensor MidR: ");
-  Serial.println(lineSensorColors.getColor4());
+  Serial.println(color3);
   Serial.print("Sensor Right: ");
-  Serial.println(lineSensorColors.getColor5());
+  Serial.println(color4);
 
   delay(1000);
 }
 
 void readLine::calibrateLineSensors() {
+  Zumo32U4Motors motor;
+  Serial.println("Start calibrating!");
   delay(1000);
   for (uint16_t i = 0; i < 120; i++) {
     if (i > 30 && i <= 90) {
-      motors.setSpeeds(-200, 200);
+      motor.setSpeeds(-200, 200);
     } else {
-      motors.setSpeeds(200, -200);
+      motor.setSpeeds(200, -200);
     }
     lineSensors.calibrate();
   }
-  motors.setSpeeds(0, 0);
+  motor.setSpeeds(0, 0);
 }
+
+String readLine::getSideColor(int i) {
+  if (lineSensorValues[i] >= leftWhiteMin && lineSensorValues[i] <= leftWhiteMax) {
+    return "White";
+  } else if (lineSensorValues[i] >= leftBrownMin && lineSensorValues[i] <= leftBrownMax) {
+    return "Brown";
+  } else if (lineSensorValues[i] >= leftGrayMin && lineSensorValues[i] <= leftGrayMax) {
+    return "Gray";
+  } else if (lineSensorValues[i] >= leftBlackMin && lineSensorValues[i] <= leftBlackMax) {
+    return "Black";
+  } else {
+    return "Unknown";
+  }
+}
+
+String readLine::getMidColor(int i) {
+  if (lineSensorValues[i] >= middleWhiteMin && lineSensorValues[i] <= middleWhiteMax) {
+    return "White";
+  } else if (lineSensorValues[i] >= middleBlackMin && lineSensorValues[i] <= middleBlackMax) {
+    return "Black";
+  } else if (lineSensorValues[i] >= middleGreenMin && lineSensorValues[i] <= middleGreenMax) {
+    return "Green";
+  } else {
+    return "Unknown";
+  }
+}
+
+// String readLine::getColor1() {
+//   if (lineSensorValues[1] >= rightWhiteMin && lineSensorValues[1] <= rightWhiteMax) {
+//     return "White";
+//   } else if (lineSensorValues[1] >= rightBrownMin && lineSensorValues[1] <= rightBrownMax) {
+//     return "Brown";
+//   } else if (lineSensorValues[1] >= rightGrayMin && lineSensorValues[1] <= rightGrayMax) {
+//     return "Gray";
+//   } else if (lineSensorValues[1] >= rightBlackMin && lineSensorValues[1] <= rightBlackMax) {
+//     return "Black";
+//   } else {
+//     return "Unknown";
+//   }
+// }
+
+// String readLine::getColor2() {
+//   if (lineSensorValues[1] >= midOutWhiteMin && lineSensorValues[1] <= midOutWhiteMax) {
+//     return "White";
+//   } else if (lineSensorValues[1] >= midOutBlackMin && lineSensorValues[1] <= midOutBlackMax) {
+//     return "Black";
+//   } else if (lineSensorValues[1] >= midOutGreenMin && lineSensorValues[1] <= midOutGreenMax) {
+//     return "Green";
+//   } else {
+//     return "Unknown";
+//   }
+// }
+
+// String readLine::getColor3() {
+//   if (lineSensorValues[2] >= middleWhiteMin && lineSensorValues[2] <= middleWhiteMax) {
+//     return "White";
+//   } else if (lineSensorValues[2] >= middleBlackMin && lineSensorValues[2] <= middleBlackMax) {
+//     return "Black";
+//   } else if (lineSensorValues[2] >= middleGreenMin && lineSensorValues[2] <= middleGreenMax) {
+//     return "Green";
+//   } else {
+//     return "Unknown";
+//   }
+// }
+
+// String readLine::getColor4() {
+//   if (lineSensorValues[3] >= midOutWhiteMin && lineSensorValues[3] <= midOutWhiteMax) {
+//     return "White";
+//   } else if (lineSensorValues[3] >= midOutBlackMin && lineSensorValues[3] <= midOutBlackMax) {
+//     return "Black";
+//   } else if (lineSensorValues[3] >= midOutGreenMin && lineSensorValues[3] <= midOutGreenMax) {
+//     return "Green";
+//   } else {
+//     return "Unknown";
+//   }
+// }
+
+// String readLine::getColor5() {
+//   if (lineSensorValues[4] >= rightWhiteMin && lineSensorValues[4] <= rightWhiteMax) {
+//     return "White";
+//   } else if (lineSensorValues[4] >= rightBrownMin && lineSensorValues[4] <= rightBrownMax) {
+//     return "Brown";
+//   } else if (lineSensorValues[4] >= rightGrayMin && lineSensorValues[4] <= rightGrayMax) {
+//     return "Gray";
+//   } else if (lineSensorValues[4] >= rightBlackMin && lineSensorValues[4] <= rightBlackMax) {
+//     return "Black";
+//   } else {
+//     return "Unknown";
+//   }
+// }

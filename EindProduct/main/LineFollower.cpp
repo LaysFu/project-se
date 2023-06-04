@@ -1,27 +1,30 @@
 #include "LineFollower.h"
-#include <Zumo32U4.h>
-#include <Wire.h>
 
-void LineFollower::followLine(readLine& rl) {
+LineFollower::LineFollower() : gameOn(true){
+  Serial.println("Linefollower created!");
+}
+
+void LineFollower::followLine() {
   bool goLeft = false;
   bool goRight = false;
 
   gyro.init(); // Initialize gyro
 
-  while (true) {
+  while (gameOn) {
     rl.identifyColor(); // Identify sensor colors
 
-    // if (isBrownLineDetected(rl)) {
+    // if (rl.color1 == "Brown" || rl.color5 == "Brown" {
+    //   gameOn = false;
     //   block.switchMode(); // Switch naar block mode
     //   break;
     // }
 
-    if (isGrayLinesDetected(rl)) {
+    if (rl.color0 == "Gray" && rl.color4 == "Gray") {
       pause = true; // pause until pitch is below zero
       continue;
-    } else if (rl.color1 == "Gray") {
+    } else if (rl.color0 == "Gray") {
       goLeft = true; // turn left on next black line
-    } else if (rl.color5 == "Gray") {
+    } else if (rl.color4 == "Gray") {
       goRight = true; // turn right on next black line
     }
 
@@ -35,20 +38,20 @@ void LineFollower::followLine(readLine& rl) {
     }
 
     if (goLeft) {
-      if (rl.color1 == "Black") {
+      if (rl.color0 == "Black") {
         turnLeft();
         goLeft = false;
       }
     } else if (goRight) {
-      if (rl.color5 == "Black") {
+      if (rl.color4 == "Black") {
         turnRight();
         goRight = false;
       }
     }
 
-    updateOnGreenLine(rl);
+    updateOnGreenLine();
 
-    int position = calculateLinePosition(rl);
+    int position = calculateLinePosition();
 
     int error = position - 2000;
 
@@ -65,13 +68,6 @@ void LineFollower::followLine(readLine& rl) {
   }
 }
 
-bool LineFollower::isBrownLineDetected(readLine& rl) {
-  return (rl.color1 == "Brown" || rl.color5 == "Brown");
-}
-
-bool LineFollower::isGrayLinesDetected(readLine& rl) {
-  return (rl.color1 == "Gray" && rl.color5 == "Gray");
-}
 
 bool LineFollower::isPitchBelowZero() {
   double pitch = gyro.calculatePitch();
@@ -94,17 +90,26 @@ void LineFollower::turnRight() {
   delay(200);
 }
 
-void LineFollower::updateOnGreenLine(readLine& rl) {
+void LineFollower::updateOnGreenLine() {
   onGreenLine = (rl.color3 == "Green");
 }
 
-int LineFollower::calculateLinePosition(readLine& rl) {
+int LineFollower::calculateLinePosition() {
   int position = 0;
-  int count = 1;
-  if (rl.color3 == getColor()) {
-      position += count * 1000;
-      count++;
-    }
+  int count = 0;
+  if (rl.color1 == getColor()) {
+    position += 0 * 1000;
+    count++;
+  }
+  else if (rl.color2 == getColor()) {
+    position += 1 * 1000;
+    count++;
+  }
+  else if (rl.color3 == getColor()) {
+    position += 2 * 1000;
+    count++;
+  }
+
   if (count > 0) {
     position /= count;
   } else {
