@@ -20,23 +20,15 @@ private:
 
 public:
   readLine();
-
-  // void LineSensorColors(const uint16_t* sensorValues);
-  String getColor0();
-  String getColor1();
-  String getColor2();
-  String getColor3();
-  String getColor4();
-  // String color1;
-  // String color2;
-  // String color3;
-  // String color4;
-  // String color5;
-
+  int16_t position;
+  
+  
+  String last0color = "White";
+  String last4color = "White";
+  int count0 = 0;
+  int count4 = 0;
   String color0;
-  String color1;
   String color2;
-  String color3;
   String color4;
   void identifyColor();
 };

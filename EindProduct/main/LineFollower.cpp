@@ -1,3 +1,4 @@
+#include "USBAPI.h"
 #include "LineFollower.h"
 
 
@@ -6,15 +7,13 @@ LineFollower::LineFollower() : gameOn(true){
 }
 
 void LineFollower::followLine() {
-  // bool goLeft = false;
-  // bool goRight = false;
+  bool goLeft = false;
+  bool goRight = false;
 
-  // //gyro.init(); // Initialize gyro
+  //gyro.init(); // Initialize gyro
 
   while (gameOn) {
-    if (bA.isPressed()) {gameOn = false;}
-    rl.identifyColor(); // Identify sensor colors
-    motors.setSpeeds(50, 50);
+    if(!(goLeft || goRight)) {rl.identifyColor();} // Identify sensor colors
 
   //   // if (rl.color1 == "Brown" || rl.color5 == "Brown" {
   //   //   gameOn = false;
@@ -22,54 +21,61 @@ void LineFollower::followLine() {
   //   //   break;
   //   // }
 
-  //   if (rl.color0 == "Gray" && rl.color4 == "Gray") {
-  //     pause = true; // pause until pitch is below zero
-  //     continue;
-  //   } else if (rl.color0 == "Gray") {
-  //     goLeft = true; // turn left on next black line
-  //   } else if (rl.color4 == "Gray") {
-  //     goRight = true; // turn right on next black line
-  //   }
+    if (rl.color0 == "Gray" && rl.color4 == "White"){
+      Serial.println("Ik ga links");
 
-  //   // if (pause) {
-  //   //   if (isPitchBelowZero()) {
-  //   //     pause = false;
-  //   //   } else {
-  //   //     pauseMovement();
-  //   //     continue;
-  //   //   }
-  //   // }
+      while(true){
+        rl.identifyColor();
+        if (rl.color0 == "Black"){
+          turnLeft();
+          break;
+        }
+      
+      }
+  
+    } 
+    else if (rl.color4 == "Gray" && rl.color0 == "White") {
+      Serial.println("Ik ga Rechts");
 
-  //   if (goLeft) {
-  //     if (rl.color0 == "Black") {
-  //       turnLeft();
-  //       goLeft = false;
-  //     }
-  //   } else if (goRight) {
-  //     if (rl.color4 == "Black") {
-  //       turnRight();
-  //       goRight = false;
-  //     }
-  //   }
+      while(true){
+        rl.identifyColor();
+        if (rl.color4=="Black"){
+          turnRight();
+          break;
+        }
+      }
+      
+    }  
+    else if (rl.color0 == "Gray" && rl.color4 == "Gray") {
+      pauseMovement();
+      delay(750);
+      goLeft = false;
+      goRight = false;
+    } 
 
-  //   updateOnGreenLine();
+    // if (goLeft && !goRight) {
+    //   if (rl.color0 == "Black") {
+    //     Serial.println("LINKS");
+        
+    //     goLeft = false;
+    //   }
+    // }
+    // if (goRight && !goLeft) {
+    //   if (rl.color4 == "Black") {
+    //     Serial.println("TRUMP");
+    //     turnRight();
+    //     goRight = false;
+    //   }
+    // }
+    updateOnGreenLine();
+     
 
-  //   int position = calculateLinePosition();
-
-  //   int error = position - 2000;
-
-  //   int leftSpeed, rightSpeed;
-  //   if (onGreenLine) {
-  //     leftSpeed = maxSpeed / 2 + calculateSpeedDifference(error);
-  //     rightSpeed = maxSpeed / 2 - calculateSpeedDifference(error);
-  //   } else {
-  //     leftSpeed = maxSpeed + calculateSpeedDifference(error);
-  //     rightSpeed = maxSpeed - calculateSpeedDifference(error);
-  //   }
-
-  //   setMotorSpeeds(leftSpeed, rightSpeed);
-  // if (count == 10) {gameOn = false;}
-  // count++;
+    int error = rl.position - 2000;
+    int leftSpeed, rightSpeed;
+    leftSpeed = maxSpeed + calculateSpeedDifference(error);
+    rightSpeed = maxSpeed - calculateSpeedDifference(error);
+    lastError = error;
+    setMotorSpeeds(leftSpeed, rightSpeed);
   }
 }
 
@@ -79,60 +85,42 @@ void LineFollower::followLine() {
 //   return (pitch < 0);
 // }
 
-// void LineFollower::pauseMovement() {
-//   motors.setSpeeds(0, 0); // Pause movement
-// }
+void LineFollower::pauseMovement() {
+  motors.setSpeeds(0, 0); // Pause movement
+}
 
-// void LineFollower::turnLeft() {
-//   leftSpeed = 0;
-//   rightSpeed = maxSpeed;
-//   delay(200);
-// }
+void LineFollower::turnLeft() {
 
-// void LineFollower::turnRight() {
-//   leftSpeed = maxSpeed;
-//   rightSpeed = 0;
-//   delay(200);
-// }
+    Serial.println("BIDEN");
+    
+    motors.setSpeeds(0, maxSpeed);
+    delay(750);
 
-// void LineFollower::updateOnGreenLine() {
-//   onGreenLine = (rl.color3 == "Green");
-// }
+}
 
-// int LineFollower::calculateLinePosition() {
-//   int position = 0;
-//   int count = 0;
-//   // if (rl.color1 == getColor()) {
-//   //   position += 0 * 1000;
-//   //   count++;
-//   // }
-//   // else if (rl.color2 == getColor()) {
-//   //   position += 1 * 1000;
-//   //   count++;
-//   // }
-//   // else if (rl.color3 == getColor()) {
-//   //   position += 2 * 1000;
-//   //   count++;
-//   // }
+void LineFollower::turnRight() {
+    Serial.println("TRUMP");
 
-//   if (count > 0) {
-//     position /= count;
-//   } else {
-//     position = 2000; // Center of line
-//   }
-//   return position;
-// }
+    motors.setSpeeds(maxSpeed, 0);
+    delay(750);
+  
+}
 
-// String LineFollower::getColor() {
-//   return (onGreenLine ? "Green" : "Black");
-// }
+void LineFollower::updateOnGreenLine() {
+  onGreenLine = (rl.color2 == "Green");
+}
 
-// int LineFollower::calculateSpeedDifference(int error) {
-//   return error / 4 + 6 * (error - lastError);
-// }
 
-// void LineFollower::setMotorSpeeds(int leftSpeed, int rightSpeed) {
-//   leftSpeed = constrain(leftSpeed, 0, maxSpeed);
-//   rightSpeed = constrain(rightSpeed, 0, maxSpeed);
-//   motors.setSpeeds(leftSpeed, rightSpeed);
-// }
+String LineFollower::getColor() {
+  return (onGreenLine ? "Green" : "Black");
+}
+
+int LineFollower::calculateSpeedDifference(int error) {
+  return error / 4 + 6 * (error - lastError);
+}
+
+void LineFollower::setMotorSpeeds(int leftSpeed, int rightSpeed) {
+  leftSpeed = constrain(leftSpeed, 0, maxSpeed);
+  rightSpeed = constrain(rightSpeed, 0, maxSpeed);
+  motors.setSpeeds(leftSpeed, rightSpeed);
+}
