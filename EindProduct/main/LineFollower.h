@@ -3,36 +3,39 @@
 
 #include <Zumo32U4Motors.h>
 #include "readLine.h"
-#include "gyro.h"
+#include <Zumo32U4Buttons.h>
+//#include "gyro.h"
 
 class LineFollower {
-private:
+ private:
   bool gameOn; //start followLine loop
   Zumo32U4Motors motors;
   readLine rl;
-  Gyro gyro;
+  //Gyro gyro;
   const int maxSpeed = 400;
   bool onGreenLine = false;
   bool pause = false;
   int lastError = 0;
   int leftSpeed = 0;
   int rightSpeed = 0;
+  int count = 0;
+  Zumo32U4ButtonA bA;
 
-  // bool isBrownLineDetected(readLine&);
-  // bool isGrayLinesDetected(readLine&);
-  bool isPitchBelowZero();
-  void pauseMovement();
-  void turnLeft();
-  void turnRight();
-  void updateOnGreenLine();
-  int calculateLinePosition();
-  String getColor();
-  int calculateSpeedDifference(int);
-  void setMotorSpeeds(int, int);
+   // bool isBrownLineDetected(readLine&);
+   // bool isGrayLinesDetected(readLine&);
+   //bool isPitchBelowZero();
+  // void pauseMovement();
+  // void turnLeft();
+  // void turnRight();
+  // void updateOnGreenLine();
+  // int calculateLinePosition();
+  // //String getColor();
+  // int calculateSpeedDifference(int);
+  // void setMotorSpeeds(int, int);
 
-public:
-  LineFollower();
-  void followLine();
+ public:
+   LineFollower();
+   void followLine();
 };
 
 #endif

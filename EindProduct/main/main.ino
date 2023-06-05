@@ -1,8 +1,8 @@
 #include "LineFollower.h"
-#include <Zumo32U4Buttons.h>
+#include <Wire.h>
+#include <Zumo32U4.h>
 
-Zumo32U4ButtonA buttonA;
-LineFollower lf;
+
 
 void setup()
 {
@@ -11,6 +11,8 @@ void setup()
 } 
 
 void loop()
-{;
-    lf.followLine();
+{
+  LineFollower lf;
+  lf.followLine();
+//Serial.println("Hello world!");    //lf.followLine();
 }
