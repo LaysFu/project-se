@@ -1,117 +1,100 @@
+#include "USBAPI.h"
 #include "LineFollower.h"
-#include <Zumo32U4.h>
-#include <Wire.h>
 
-void LineFollower::followLine(readLine& rl) {
+
+LineFollower::LineFollower() : gameOn(true){
+  Serial.println("Linefollower created!");
+}
+
+void LineFollower::followLine() {
   bool goLeft = false;
   bool goRight = false;
 
-  gyro.init(); // Initialize gyro
+  //gyro.init(); // Initialize gyro
 
-  while (true) {
-    rl.identifyColor(); // Identify sensor colors
+  while (gameOn) {
+    if(!(goLeft || goRight)) {rl.identifyColor();} // Identify sensor colors
 
-    // if (isBrownLineDetected(rl)) {
-    //   block.switchMode(); // Switch naar block mode
-    //   break;
+  //   // if (rl.color1 == "Brown" || rl.color5 == "Brown" {
+  //   //   gameOn = false;
+  //   //   block.switchMode(); // Switch naar block mode
+  //   //   break;
+  //   // }
+
+    if (rl.color0 == "Gray" && rl.color4 == "White"){
+          Serial.println("Ik ga links");
+          turnLeft();
+    } 
+
+    else if (rl.color4 == "Gray" && rl.color0 == "White") {
+          Serial.println("Ik ga Rechts");
+          turnRight();
+          }
+        }
+      
+      
+      //-----------------------------
+    // else if (rl.color0 == "Gray" && rl.color4 == "Gray") {
+    //   pauseMovement();
+    //   delay(750);
+    //   goLeft = false;
+    //   goRight = false;
+    // } 
+
+    // if (goLeft && !goRight) {
+    //   if (rl.color0 == "Black") {
+    //     Serial.println("LINKS");
+        
+    //     goLeft = false;
+    //   }
     // }
+    // if (goRight && !goLeft) {
+    //   if (rl.color4 == "Black") {
+    //     Serial.println("TRUMP");
+    //     turnRight();
+    //     goRight = false;
+    //   }
+    // }
+    updateOnGreenLine();
+     
 
-    if (isGrayLinesDetected(rl)) {
-      pause = true; // pause until pitch is below zero
-      continue;
-    } else if (rl.color1 == "Gray") {
-      goLeft = true; // turn left on next black line
-    } else if (rl.color5 == "Gray") {
-      goRight = true; // turn right on next black line
-    }
-
-    if (pause) {
-      if (isPitchBelowZero()) {
-        pause = false;
-      } else {
-        pauseMovement();
-        continue;
-      }
-    }
-
-    if (goLeft) {
-      if (rl.color1 == "Black") {
-        turnLeft();
-        goLeft = false;
-      }
-    } else if (goRight) {
-      if (rl.color5 == "Black") {
-        turnRight();
-        goRight = false;
-      }
-    }
-
-    updateOnGreenLine(rl);
-
-    int position = calculateLinePosition(rl);
-
-    int error = position - 2000;
-
+    int error = rl.position - 2000;
     int leftSpeed, rightSpeed;
-    if (onGreenLine) {
-      leftSpeed = maxSpeed / 2 + calculateSpeedDifference(error);
-      rightSpeed = maxSpeed / 2 - calculateSpeedDifference(error);
-    } else {
-      leftSpeed = maxSpeed + calculateSpeedDifference(error);
-      rightSpeed = maxSpeed - calculateSpeedDifference(error);
-    }
-
+    leftSpeed = maxSpeed + calculateSpeedDifference(error);
+    rightSpeed = maxSpeed - calculateSpeedDifference(error);
+    lastError = error;
     setMotorSpeeds(leftSpeed, rightSpeed);
-  }
-}
+  
 
-bool LineFollower::isBrownLineDetected(readLine& rl) {
-  return (rl.color1 == "Brown" || rl.color5 == "Brown");
-}
 
-bool LineFollower::isGrayLinesDetected(readLine& rl) {
-  return (rl.color1 == "Gray" && rl.color5 == "Gray");
 }
-
-bool LineFollower::isPitchBelowZero() {
-  double pitch = gyro.calculatePitch();
-  return (pitch < 0);
-}
+// bool LineFollower::isPitchBelowZero() {
+//   double pitch = gyro.calculatePitch();
+//   return (pitch < 0);
+// }
 
 void LineFollower::pauseMovement() {
   motors.setSpeeds(0, 0); // Pause movement
 }
-
+//-----------------------------------
 void LineFollower::turnLeft() {
-  leftSpeed = 0;
-  rightSpeed = maxSpeed;
-  delay(200);
+    
+    Serial.println("LEFT");
+    motors.setSpeeds(0, maxSpeed);
+    
 }
 
 void LineFollower::turnRight() {
-  leftSpeed = maxSpeed;
-  rightSpeed = 0;
-  delay(200);
+
+    Serial.println("RIGHT");
+    motors.setSpeeds(maxSpeed, 0);
+     
+}
+//--------------------------------------
+void LineFollower::updateOnGreenLine() {
+  onGreenLine = (rl.color2 == "Green");
 }
 
-void LineFollower::updateOnGreenLine(readLine& rl) {
-  onGreenLine = (rl.color3 == "Green");
-}
-
-int LineFollower::calculateLinePosition(readLine& rl) {
-  int position = 0;
-  int count = 1;
-  if (rl.color3 == getColor()) {
-      position += count * 1000;
-      count++;
-    }
-  if (count > 0) {
-    position /= count;
-  } else {
-    position = 2000; // Center of line
-  }
-  return position;
-}
 
 String LineFollower::getColor() {
   return (onGreenLine ? "Green" : "Black");
