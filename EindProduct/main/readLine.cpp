@@ -1,26 +1,54 @@
+#include "HardwareSerial.h"
+#include "USBAPI.h"
 #include "readLine.h"
 
 readLine::readLine() {
   lineSensors.initFiveSensors();
   calibrateLineSensors();
+  lineSensors.emittersOn();
 }
 
 void readLine::identifyColor() {
-  position = lineSensors.readLine(lineSensorValues);
+  position = lineSensors.readLine(lineSensorPos);
+  lineSensors.readCalibrated(lineSensorValues);
+  
 
-  for (int i = 0; i < NUM_SENSORS; i++){
-    switch(i){
-      case 0:
-        color0 = getSideColor(i); 
-        break;
-      case 2: 
-        color2 = getMidColor(i); 
-        break;
-      case 4: 
-        color4 = getSideColor(i); 
-        break;
+  //Serial.println(lineSensorValues[0]);
+  if(lineSensorValues[0] >= 200 && lineSensorValues[0] <=  250){ 
+          leftGreyCount++; 
+          leftBlackCount =0;
+  }
+  else if(lineSensorValues[0] >= 500){ 
+          leftBlackCount++; 
+          leftGreyCount =0;
+        }
+  if(lineSensorValues[4] >= 150 && lineSensorValues[4] <= 200 ){ 
+          rightGreyCount++; 
+          rightBlackCount =0;
+  }
+  else if(lineSensorValues[4] >= 500){ 
+          rightBlackCount++; 
+          rightGreyCount =0;
+  }
+  if (leftGreyCount >= 4){
+      Serial.println("Grey");
+        color0 = "Gray";
+        leftGreyCount = 0; 
     }
- }
+  if (rightGreyCount >= 4) {
+        Serial.println("Grey");
+        color4 = "Gray";
+        rightGreyCount = 0; 
+      }
+    if (leftBlackCount > 8 || rightBlackCount > 8){
+      Serial.println("Black");
+      color8 = "Black";
+      leftGreyCount = 0;
+      rightGreyCount = 0; 
+      leftBlackCount = 0;
+      rightBlackCount =0;
+    }
+
   
   
     // Serial.print("Sensor Left: ");
