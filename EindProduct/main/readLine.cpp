@@ -1,50 +1,110 @@
-#include <Arduino.h>
+#include "HardwareSerial.h"
+#include "USBAPI.h"
 #include "readLine.h"
-#include "Zumo32U4.h"
 
-Zumo32U4Motors motors;
-Zumo32U4LineSensors lineSensors;
-
-const int numSensors = 5;
-
-readLine::readLine() {lineSensors.initFiveSensors();}
-readLine::readLine(uint16_t i) {lineSensors.initFiveSensors();}
+readLine::readLine() {
+  lineSensors.initFiveSensors();
+  calibrateLineSensors();
+  lineSensors.emittersOn();
+}
 
 void readLine::identifyColor() {
-  uint16_t lineSensorValues[numSensors];
-  lineSensors.read(lineSensorValues);
+  position = lineSensors.readLine(lineSensorPos);
+  lineSensors.readCalibrated(lineSensorValues);
+  
 
-  readLine lineSensorColors(lineSensorValues);
+  Serial.println(lineSensorValues[0]);
+  Serial.println(lineSensorValues[4]);
+  if((lineSensorValues[0] >= 280 && lineSensorValues[0] <= 350) && lineSensorValues[0] >= 280 && lineSensorValues[0] <= 350) {
+    brownCount++;
+  }
+  if(lineSensorValues[0] >= 200 && lineSensorValues[0] <=  250){ 
+          leftGreyCount++; 
+          leftBlackCount =0;
+  }
+  else if(lineSensorValues[0] >= 500){ 
+          leftBlackCount++; 
+          leftGreyCount =0;
+        }
+  if(lineSensorValues[4] >= 150 && lineSensorValues[4] <= 200 ){ 
+          rightGreyCount++; 
+          rightBlackCount =0;
+  }
+  else if(lineSensorValues[4] >= 500){ 
+          rightBlackCount++; 
+          rightGreyCount =0;
+  }
+  if (leftGreyCount >= 4){
+      Serial.println("Grey");
+        color0 = "Gray";
+        leftGreyCount = 0; 
+    }
+  if (rightGreyCount >= 4) {
+        Serial.println("Grey");
+        color4 = "Gray";
+        rightGreyCount = 0; 
+      }
+  if (leftBlackCount > 5 || rightBlackCount > 5){
+    Serial.println("Black");
+    color8 = "Black";
+    leftGreyCount = 0;
+    rightGreyCount = 0; 
+    leftBlackCount = 0;
+    rightBlackCount =0;
+  }
+  if (brownCount > 4){
+    Serial.println("Brown");
+    color8 = "Brown";
+    brownCount = 0;
+  }
 
-  color1 = lineSensorColors.getColor1();
-  color2 = lineSensorColors.getColor2();
-  color3 = lineSensorColors.getColor3();
-  color4 = lineSensorColors.getColor4();
-  color5 = lineSensorColors.getColor5();
+  
+  
+    // Serial.print("Sensor Left: ");
+    // Serial.println(color0);
+  
+    // // Serial.print("Sensor Mid: ");
+    // // Serial.println(color2);
+    // Serial.print("Sensor Right: ");
+    // Serial.println(color4);
+    // Serial.println();
 
-  Serial.print("Sensor Left: ");
-  Serial.println(lineSensorColors.getColor1());
-  Serial.print("Sensor MidL: ");
-  Serial.println(lineSensorColors.getColor2());
-  Serial.print("Sensor Mid: ");
-  Serial.println(lineSensorColors.getColor3());
-  Serial.print("Sensor MidR: ");
-  Serial.println(lineSensorColors.getColor4());
-  Serial.print("Sensor Right: ");
-  Serial.println(lineSensorColors.getColor5());
-
-  delay(1000);
+  
 }
 
 void readLine::calibrateLineSensors() {
+  Zumo32U4Motors motor;
+  Serial.println("Start calibrating!");
   delay(1000);
   for (uint16_t i = 0; i < 120; i++) {
     if (i > 30 && i <= 90) {
-      motors.setSpeeds(-200, 200);
+      motor.setSpeeds(-200, 200);
     } else {
-      motors.setSpeeds(200, -200);
+      motor.setSpeeds(200, -200);
     }
     lineSensors.calibrate();
   }
-  motors.setSpeeds(0, 0);
+  motor.setSpeeds(0, 0);
+}
+
+String readLine::getSideColor(int i) {
+  if (lineSensorValues[i] >= sideBlackMin && lineSensorValues[i] <= sideBlackMax) {
+    return "Black";
+  } else if (lineSensorValues[i] >= sideBrownMin && lineSensorValues[i] <= sideBrownMax) {
+    return "Brown";
+  } else if (lineSensorValues[i] >= sideGrayMin && lineSensorValues[i] <= sideGrayMax) {
+    return "Gray";
+  } else {
+    return "White";
+  }
+}
+
+String readLine::getMidColor(int i) {
+  if (lineSensorValues[i] >= middleBlackMin && lineSensorValues[i] <= middleBlackMax) {
+    return "Black";
+  } else if (lineSensorValues[i] >= middleGreenMin && lineSensorValues[i] <= middleGreenMax) {
+    return "Green";
+  } else {
+    return "White";
+  }
 }

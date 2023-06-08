@@ -1,117 +1,117 @@
+#include "Arduino.h"
+#include "USBAPI.h"
 #include "LineFollower.h"
-#include <Zumo32U4.h>
-#include <Wire.h>
+#include "Zumo32U4Buttons.h"
 
-void LineFollower::followLine(readLine& rl) {
-  bool goLeft = false;
-  bool goRight = false;
+LineFollower::LineFollower() : gameOn(true){
+  Serial.println("Linefollower created!");
+}
 
-  gyro.init(); // Initialize gyro
+void LineFollower::followLine() {
 
-  while (true) {
+  //gyro.init(); // Initialize gyro
+
+  while (gameOn) {
     rl.identifyColor(); // Identify sensor colors
 
-    // if (isBrownLineDetected(rl)) {
-    //   block.switchMode(); // Switch naar block mode
-    //   break;
-    // }
-
-    if (isGrayLinesDetected(rl)) {
-      pause = true; // pause until pitch is below zero
-      continue;
-    } else if (rl.color1 == "Gray") {
-      goLeft = true; // turn left on next black line
-    } else if (rl.color5 == "Gray") {
-      goRight = true; // turn right on next black line
-    }
-
-    if (pause) {
-      if (isPitchBelowZero()) {
-        pause = false;
-      } else {
-        pauseMovement();
-        continue;
-      }
-    }
-
-    if (goLeft) {
-      if (rl.color1 == "Black") {
-        turnLeft();
-        goLeft = false;
-      }
-    } else if (goRight) {
-      if (rl.color5 == "Black") {
+    if (rl.color4 == "Gray" && rl.color8 == "Black"){ //&& rl.color4 == "White"){
+        Serial.println("Ik ga Rechts");
         turnRight();
-        goRight = false;
-      }
     }
+    if (rl.color0 == "Gray" && rl.color8 == "Black"){ //&& rl.color4 == "White"){
+        Serial.println("Ik ga Links");
+        turnLeft();
+    }
+    if (rl.color8 == "Brown"){
+        Serial.println("Ik ga naar block");
+        Zumo32U4ButtonB bB;
+        motors.setSpeeds(200,200);
+        delay(2000);
+        motors.setSpeeds(0,0);
+        delay(10000);
+        rl.color8 = "";
+    }
+  
+    // } 
+    // else if (rl.color4 == "Gray" && rl.color0 == "White") {
+    //   Serial.println("Ik ga Rechts");
 
-    updateOnGreenLine(rl);
+    //   while(true){
+    //     rl.identifyColor();
+    //     if (rl.color4=="Black"){
+    //       turnRight();
+    //       break;
+    //     }
+    //   }
+      
+    // }  
+    // else if (rl.color0 == "Gray" && rl.color4 == "Gray") {
+    //   pauseMovement();
+    //   delay(750);
+    //   goLeft = false;
+    //   goRight = false;
+    // } 
 
-    int position = calculateLinePosition(rl);
+    // if (goLeft && !goRight) {
+    //   if (rl.color0 == "Black") {
+    //     Serial.println("LINKS");
+        
+    //     goLeft = false;
+    //   }
+    // }
+    // if (goRight && !goLeft) {
+    //   if (rl.color4 == "Black") {
+    //     Serial.println("TRUMP");
+    //     turnRight();
+    //     goRight = false;
+    //   }
+    // }
+    // updateOnGreenLine();
+     
 
-    int error = position - 2000;
-
+    int error = rl.position - 2000;
     int leftSpeed, rightSpeed;
-    if (onGreenLine) {
-      leftSpeed = maxSpeed / 2 + calculateSpeedDifference(error);
-      rightSpeed = maxSpeed / 2 - calculateSpeedDifference(error);
-    } else {
-      leftSpeed = maxSpeed + calculateSpeedDifference(error);
-      rightSpeed = maxSpeed - calculateSpeedDifference(error);
-    }
-
+    leftSpeed = maxSpeed + calculateSpeedDifference(error);
+    rightSpeed = maxSpeed - calculateSpeedDifference(error);
+    lastError = error;
     setMotorSpeeds(leftSpeed, rightSpeed);
   }
 }
 
-bool LineFollower::isBrownLineDetected(readLine& rl) {
-  return (rl.color1 == "Brown" || rl.color5 == "Brown");
-}
 
-bool LineFollower::isGrayLinesDetected(readLine& rl) {
-  return (rl.color1 == "Gray" && rl.color5 == "Gray");
-}
-
-bool LineFollower::isPitchBelowZero() {
-  double pitch = gyro.calculatePitch();
-  return (pitch < 0);
-}
+// bool LineFollower::isPitchBelowZero() {
+//   double pitch = gyro.calculatePitch();
+//   return (pitch < 0);
+// }
 
 void LineFollower::pauseMovement() {
   motors.setSpeeds(0, 0); // Pause movement
 }
 
 void LineFollower::turnLeft() {
-  leftSpeed = 0;
-  rightSpeed = maxSpeed;
-  delay(200);
+
+    Serial.println("BIDEN");
+    
+    motors.setSpeeds(0, 200);
+    delay(700);
+    rl.color4 = "";
+    rl.color8 = "";
+
 }
 
 void LineFollower::turnRight() {
-  leftSpeed = maxSpeed;
-  rightSpeed = 0;
-  delay(200);
+    Serial.println("TRUMP");
+
+    motors.setSpeeds(200, 0);
+    delay(700);
+    rl.color4 = "";
+    rl.color8 = "";
 }
 
-void LineFollower::updateOnGreenLine(readLine& rl) {
-  onGreenLine = (rl.color3 == "Green");
+void LineFollower::updateOnGreenLine() {
+  onGreenLine = (rl.color2 == "Green");
 }
 
-int LineFollower::calculateLinePosition(readLine& rl) {
-  int position = 0;
-  int count = 1;
-  if (rl.color3 == getColor()) {
-      position += count * 1000;
-      count++;
-    }
-  if (count > 0) {
-    position /= count;
-  } else {
-    position = 2000; // Center of line
-  }
-  return position;
-}
 
 String LineFollower::getColor() {
   return (onGreenLine ? "Green" : "Black");

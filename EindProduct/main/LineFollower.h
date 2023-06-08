@@ -1,39 +1,42 @@
 #ifndef LineFollower_h
 #define LineFollower_h
 
-#include <Zumo32U4.h>
+#include <Zumo32U4Motors.h>
 #include "readLine.h"
-#include "gyro.h"
-#include "Block.h"
+#include <Zumo32U4Buttons.h>
+//#include "gyro.h"
 
 class LineFollower {
-private:
+ private:
+  bool gameOn; //start followLine loop
   Zumo32U4Motors motors;
-  readLine readline;
-  Gyro gyro;
-  Block block;
-  const int maxSpeed = 400;
+  readLine rl;
+  //Gyro gyro;
+  const int maxSpeed = 200;
   bool onGreenLine = false;
   bool pause = false;
   int lastError = 0;
   int leftSpeed = 0;
   int rightSpeed = 0;
+  int count = 0;
+  Zumo32U4ButtonA bA;
+  Zumo32U4ButtonB bB;
 
-public:
-  void followLine(readLine&);
-
-private:
-  bool isBrownLineDetected(readLine&);
-  bool isGrayLinesDetected(readLine&);
-  bool isPitchBelowZero();
+   // bool isBrownLineDetected(readLine&);
+   // bool isGrayLinesDetected(readLine&);
+   //bool isPitchBelowZero();
   void pauseMovement();
   void turnLeft();
   void turnRight();
-  void updateOnGreenLine(readLine&);
-  int calculateLinePosition(readLine&);
+  void updateOnGreenLine();
+  int calculateLinePosition();
   String getColor();
-  int calculateSpeedDifference(int error);
-  void setMotorSpeeds(int leftSpeed, int rightSpeed);
+  int calculateSpeedDifference(int);
+  void setMotorSpeeds(int, int);
+
+ public:
+   LineFollower();
+   void followLine();
 };
 
 #endif
