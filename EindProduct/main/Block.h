@@ -1,45 +1,44 @@
 #include "Zumo32U4ProximitySensors.h"
-#include "Zumo32U4LineSensors.h"
+#include "readLine.h"
 #include "Zumo32U4Motors.h"
 
 class Block{
     private:
         Zumo32U4ProximitySensors proxySensy;
-        Zumo32U4LineSensors linySensy;
+        readLine& blockRL;
         Zumo32U4Motors motor;
 
-        // staat block aan
-        bool status = false;;
+        
 
-        // sensors
-        int cleft_sensor = 0;
-        int left_sensor = 0;
-        int cright_sensor = 0;
-        int right_sensor = 0;
-        unsigned int line_sensor[3];
+        // Sensor Variables
+        // 0 = geen obstakel
+        // 6 = obstakel heel dichtbij    
+        int left_sensor;
+        int right_sensor;
 
         // bool voor logic
         bool blockLinedUp = false;
-        bool lineSensor = false;
 
-        // lees prox sensors uit
-        void readProxySensors();
         // lees line sensors uit
-        void readLineSensors();
+        //void readLineSensors();
         // als blockLinedUp en line geregistreerd stop
-        bool checkWin();
+        //bool checkWin();
 
     public: 
         Block();
         ~Block() = default;
 
+        // staat block aan
+        bool status = false;
         // vind het block door area te scannen
         bool findBlock();
         // zorg dat je niet over de line gaat
-        void avoidLine();
+        //void avoidLine();
         // als block gevonden is zorgen dat je er goed voor komt te staan
         void lineUpBlock();
         // als blockLinedUp duw block 
         void pushBlock();
+        // lees prox sensors uit
+        void readProxySensors();
         
 };

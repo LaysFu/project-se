@@ -2,69 +2,73 @@
 
 Block::Block(){
     status = true;
+    
     proxySensy.initThreeSensors();
-    linySensy.initThreeSensors();
-    linySensy.emittersOn();
-    for(int i = 0; i < 400; i++){
-        linySensy.calibrate();
-    }
+    left_sensor = 0;
+    right_sensor = 0;
 }
 
 void Block::readProxySensors(){
     proxySensy.read();
-    cleft_sensor = proxySensy.countsFrontWithLeftLeds();
-    left_sensor = proxySensy.countsLeftWithLeftLeds();
-    cright_sensor = proxySensy.countsFrontWithRightLeds();
-    right_sensor = proxySensy.countsRightWithRightLeds();
-};
-
-void Block::readLineSensors(){
-    linySensy.read(line_sensor);
+    left_sensor = proxySensy.countsFrontWithLeftLeds();
+    right_sensor = proxySensy.countsFrontWithRightLeds();
 };
 
 bool Block::findBlock(){
     readProxySensors();
-    if (cleft_sensor || left_sensor || cright_sensor || right_sensor) {
+    if (left_sensor || right_sensor) {
         return true;
     }
     return false;
 }
 
 void Block::lineUpBlock(){
-    // draai om te zorgen dat block in midden van zumo staat
-};
-
-void Block::avoidLine(){
-    // if blockLinedUp = false; and if linesensor registreerd line, move away
-    readLineSensors();
-    if (line_sensor[0] > 100) {
-        motor.setSpeeds(0,100);
-    }
-    if (line_sensor[1] > 100) {
-        motor.setSpeeds(-100,-50);
-    }
-    if (line_sensor[2] > 100) {
-        motor.setSpeeds(100,0);
-    }
+  // draai om te zorgen dat block in midden van zumo staat
+  if (left_sensor <= 1 && right_sensor <= 1) {
+    motor.setSpeeds(100, -100);
+    delay(1000);
+    motor.setSpeeds(0, 0);
+  }
 }
+
+// void Block::avoidLine(){
+//     // if blockLinedUp = false; and if linesensor registreerd line, move away
+//     blockRL.identifyColor();
+//     if (blockRL.color1 > 100) {
+//         motor.setSpeeds(0,100);
+//     }
+//     if (blockRL.color2 > 100) {
+//         motor.setSpeeds(-100,-50);
+//     }
+//     if (blockRL.color3 > 100) {
+//         motor.setSpeeds(100,0);
+//     }
+// }
 
 void Block::pushBlock(){
-    // if blockLinedUp = true, push. blijf ook kijken of blockLinedUp en checkWin
-    if (blockLinedUp && !checkWin()){
-        motor.setSpeeds(200, 200);
+    
+    if (left_sensor > 1 && right_sensor > 1) {
+      motor.setSpeeds(300, 300);
+      blockLinedUp = true;
     }
+    else if (left_sensor >= 5 && right_sensor < 5) {
+      motor.setSpeeds(150, 300);
+      blockLinedUp = true;
+    }
+    else if (left_sensor < 5 && right_sensor >= 5) {
+      motor.setSpeeds(300, 150);
+      blockLinedUp = true;
+    }
+
+    delay(10);
 }
 
-bool Block::checkWin(){
-    // check if blockLinedUp = true; if linesensor registreerd line, stop. 
-    readLineSensors();
-    if (blockLinedUp){
-        for (unsigned int i = 0; i < 3; i++){
-            if (line_sensor[i] > 100){
-                return true;
-            }
-        }
-    }
-    return false;
-}
+// bool Block::checkWin() {
+//     // check if blockLinedUp = true; if linesensor registreerd line, stop. 
+//     if (blockLinedUp){
+//         if (blockRL.color1 > 100 || blockRL.color2 > 100 || blockRL.color3 > 100 ) {
+//           return true;
+//         }
+//     return false;
+// }
 
