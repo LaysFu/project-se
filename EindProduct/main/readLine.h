@@ -27,6 +27,7 @@ public:
   int rightBlackCount = 0;
   int leftGreyCount = 0;
   int leftBlackCount = 0;
+  int brownCount = 0;
   String last0color = "White";
   String last4color = "White";
   int count0 = 0;

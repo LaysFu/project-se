@@ -13,7 +13,11 @@ void readLine::identifyColor() {
   lineSensors.readCalibrated(lineSensorValues);
   
 
-  //Serial.println(lineSensorValues[0]);
+  Serial.println(lineSensorValues[0]);
+  Serial.println(lineSensorValues[4]);
+  if((lineSensorValues[0] >= 280 && lineSensorValues[0] <= 350) && lineSensorValues[0] >= 280 && lineSensorValues[0] <= 350) {
+    brownCount++;
+  }
   if(lineSensorValues[0] >= 200 && lineSensorValues[0] <=  250){ 
           leftGreyCount++; 
           leftBlackCount =0;
@@ -40,14 +44,19 @@ void readLine::identifyColor() {
         color4 = "Gray";
         rightGreyCount = 0; 
       }
-    if (leftBlackCount > 8 || rightBlackCount > 8){
-      Serial.println("Black");
-      color8 = "Black";
-      leftGreyCount = 0;
-      rightGreyCount = 0; 
-      leftBlackCount = 0;
-      rightBlackCount =0;
-    }
+  if (leftBlackCount > 5 || rightBlackCount > 5){
+    Serial.println("Black");
+    color8 = "Black";
+    leftGreyCount = 0;
+    rightGreyCount = 0; 
+    leftBlackCount = 0;
+    rightBlackCount =0;
+  }
+  if (brownCount > 4){
+    Serial.println("Brown");
+    color8 = "Brown";
+    brownCount = 0;
+  }
 
   
   

@@ -1,25 +1,18 @@
+#include "Arduino.h"
 #include "USBAPI.h"
 #include "LineFollower.h"
-
+#include "Zumo32U4Buttons.h"
 
 LineFollower::LineFollower() : gameOn(true){
   Serial.println("Linefollower created!");
 }
 
 void LineFollower::followLine() {
-  bool goLeft = false;
-  bool goRight = false;
 
   //gyro.init(); // Initialize gyro
 
   while (gameOn) {
     rl.identifyColor(); // Identify sensor colors
-
-  //   // if (rl.color1 == "Brown" || rl.color5 == "Brown" {
-  //   //   gameOn = false;
-  //   //   block.switchMode(); // Switch naar block mode
-  //   //   break;
-  //   // }
 
     if (rl.color4 == "Gray" && rl.color8 == "Black"){ //&& rl.color4 == "White"){
         Serial.println("Ik ga Rechts");
@@ -29,8 +22,15 @@ void LineFollower::followLine() {
         Serial.println("Ik ga Links");
         turnLeft();
     }
-      
-    //   }
+    if (rl.color8 == "Brown"){
+        Serial.println("Ik ga naar block");
+        Zumo32U4ButtonB bB;
+        motors.setSpeeds(200,200);
+        delay(2000);
+        motors.setSpeeds(0,0);
+        delay(10000);
+        rl.color8 = "";
+    }
   
     // } 
     // else if (rl.color4 == "Gray" && rl.color0 == "White") {
