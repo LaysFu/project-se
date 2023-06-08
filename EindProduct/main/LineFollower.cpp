@@ -13,60 +13,49 @@ void LineFollower::followLine() {
   //gyro.init(); // Initialize gyro
 
   while (gameOn) {
-    if(!(goLeft || goRight)) {rl.identifyColor();} // Identify sensor colors
-
+    rl.identifyColor(); // Identify sensor colors
+    if (!(goLeft || goRight)){
   //   // if (rl.color1 == "Brown" || rl.color5 == "Brown" {
   //   //   gameOn = false;
   //   //   block.switchMode(); // Switch naar block mode
   //   //   break;
   //   // }
 
-    if (rl.color0 == "Gray" && rl.color4 == "White"){
-      Serial.println("Ik ga links");
+      if (rl.color0 == "Gray" && rl.color4 == "Gray") {
+      } else  
+      else if (rl.color0 == "Gray" && rl.color4 == "White"){
+            Serial.println("Ik ga links");
+            goLeft = true;
+      } 
 
-      while(true){
-        rl.identifyColor();
-        if (rl.color0 == "Black"){
-          turnLeft();
-          break;
-        }
-      
-      }
-  
-    } 
-    else if (rl.color4 == "Gray" && rl.color0 == "White") {
-      Serial.println("Ik ga Rechts");
-
-      while(true){
-        rl.identifyColor();
-        if (rl.color4=="Black"){
-          turnRight();
-          break;
-        }
-      }
-      
-    }  
-    else if (rl.color0 == "Gray" && rl.color4 == "Gray") {
-      pauseMovement();
-      delay(750);
-      goLeft = false;
-      goRight = false;
-    } 
-
-    // if (goLeft && !goRight) {
-    //   if (rl.color0 == "Black") {
-    //     Serial.println("LINKS");
+      else if (rl.color4 == "Gray" && rl.color0 == "White") {
+            Serial.println("Ik ga Rechts");
+            goRight = true;
+            }
+    }
         
-    //     goLeft = false;
-    //   }
-    // }
-    // if (goRight && !goLeft) {
-    //   if (rl.color4 == "Black") {
-    //     Serial.println("TRUMP");
-    //     turnRight();
-    //     goRight = false;
-    //   }
-    // }
+      
+      
+      //-----------------------------
+    // else if (rl.color0 == "Gray" && rl.color4 == "Gray") {
+    //   pauseMovement();
+    //   delay(750);
+    //   goLeft = false;
+    //   goRight = false;
+    // } 
+
+    if (goLeft && !goRight) {
+      if (rl.color0 && rl.color4 != "White") {
+        turnLeft();
+        goLeft = false;
+      }
+    }
+    if (goRight && !goLeft) {
+      if (rl.color0 && rl.color4 != "White") {
+        turnRight();
+        goRight = false;
+      }
+    }
     updateOnGreenLine();
      
 
@@ -76,10 +65,10 @@ void LineFollower::followLine() {
     rightSpeed = maxSpeed - calculateSpeedDifference(error);
     lastError = error;
     setMotorSpeeds(leftSpeed, rightSpeed);
+  
+
   }
 }
-
-
 // bool LineFollower::isPitchBelowZero() {
 //   double pitch = gyro.calculatePitch();
 //   return (pitch < 0);
@@ -88,24 +77,21 @@ void LineFollower::followLine() {
 void LineFollower::pauseMovement() {
   motors.setSpeeds(0, 0); // Pause movement
 }
-
+//-----------------------------------
 void LineFollower::turnLeft() {
-
-    Serial.println("BIDEN");
     
+    Serial.println("LEFT");
     motors.setSpeeds(0, maxSpeed);
-    delay(750);
-
+    
 }
 
 void LineFollower::turnRight() {
-    Serial.println("TRUMP");
 
+    Serial.println("RIGHT");
     motors.setSpeeds(maxSpeed, 0);
-    delay(750);
-  
+     
 }
-
+//--------------------------------------
 void LineFollower::updateOnGreenLine() {
   onGreenLine = (rl.color2 == "Green");
 }

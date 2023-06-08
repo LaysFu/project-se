@@ -25,6 +25,8 @@ public:
   
   String last0color = "White";
   String last4color = "White";
+  int count0 = 0;
+  int count4 = 0;
   String color0;
   String color2;
   String color4;

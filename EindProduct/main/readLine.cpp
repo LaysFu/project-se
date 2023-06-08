@@ -8,28 +8,31 @@ readLine::readLine() {
 void readLine::identifyColor() {
   position = lineSensors.readLine(lineSensorValues);
 
-  for (int i = 0; i < NUM_SENSORS; i++) {
-    switch (i) {
+  for (int i = 0; i < NUM_SENSORS; i++){
+    switch(i){
       case 0:
-        color0 = getSideColor(i);
+        color0 = getSideColor(i); 
         break;
-      case 2:
-        color2 = getMidColor(i);
+      case 2: 
+        color2 = getMidColor(i); 
         break;
-      case 4:
-        color4 = getSideColor(i);
+      case 4: 
+        color4 = getSideColor(i); 
         break;
     }
-  }
+ }
+  
+  
+    // Serial.print("Sensor Left: ");
+    // Serial.println(color0);
+  
+    // // Serial.print("Sensor Mid: ");
+    // // Serial.println(color2);
+    // Serial.print("Sensor Right: ");
+    // Serial.println(color4);
+    // Serial.println();
 
-  Serial.print("Sensor Left: ");
-  Serial.println(color0);
-
-  // Serial.print("Sensor Mid: ");
-  // Serial.println(color2);
-  Serial.print("Sensor Right: ");
-  Serial.println(color4);
-  Serial.println();
+  
 }
 
 void readLine::calibrateLineSensors() {
@@ -48,28 +51,11 @@ void readLine::calibrateLineSensors() {
 }
 
 String readLine::getSideColor(int i) {
-  int blackCount = 0;
-  int brownCount = 0;
-  int grayCount = 0;
-  int whiteCount = 0;
-
-  for (int j = 0; j < 8; j++) {
-    if (lineSensorValues[i] >= sideBlackMin && lineSensorValues[i] <= sideBlackMax) {
-      blackCount++;
-    } else if (lineSensorValues[i] >= sideBrownMin && lineSensorValues[i] <= sideBrownMax) {
-      brownCount++;
-    } else if (lineSensorValues[i] >= sideGrayMin && lineSensorValues[i] <= sideGrayMax) {
-      grayCount++;
-    } else {
-      whiteCount++;
-    }
-  }
-
-  if (blackCount >= 8) {
+  if (lineSensorValues[i] >= sideBlackMin && lineSensorValues[i] <= sideBlackMax) {
     return "Black";
-  } else if (brownCount >= 8) {
+  } else if (lineSensorValues[i] >= sideBrownMin && lineSensorValues[i] <= sideBrownMax) {
     return "Brown";
-  } else if (grayCount >= 8) {
+  } else if (lineSensorValues[i] >= sideGrayMin && lineSensorValues[i] <= sideGrayMax) {
     return "Gray";
   } else {
     return "White";
@@ -77,23 +63,9 @@ String readLine::getSideColor(int i) {
 }
 
 String readLine::getMidColor(int i) {
-  int blackCount = 0;
-  int greenCount = 0;
-  int whiteCount = 0;
-
-  for (int j = 0; j < 8; j++) {
-    if (lineSensorValues[i] >= middleBlackMin && lineSensorValues[i] <= middleBlackMax) {
-      blackCount++;
-    } else if (lineSensorValues[i] >= middleGreenMin && lineSensorValues[i] <= middleGreenMax) {
-      greenCount++;
-    } else {
-      whiteCount++;
-    }
-  }
-
-  if (blackCount >= 8) {
+  if (lineSensorValues[i] >= middleBlackMin && lineSensorValues[i] <= middleBlackMax) {
     return "Black";
-  } else if (greenCount >= 8) {
+  } else if (lineSensorValues[i] >= middleGreenMin && lineSensorValues[i] <= middleGreenMax) {
     return "Green";
   } else {
     return "White";

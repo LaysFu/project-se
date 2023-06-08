@@ -18,10 +18,7 @@ class LineFollower {
   int lastError = 0;
   int leftSpeed = 0;
   int rightSpeed = 0;
-  //--------------------
-  int count0 = 0;
-  int count4 = 0;
-  //--------------------
+  int count = 0;
   Zumo32U4ButtonA bA;
   Zumo32U4ButtonB bB;
 
