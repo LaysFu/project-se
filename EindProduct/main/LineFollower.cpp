@@ -14,6 +14,21 @@ void LineFollower::followLine() {
   while (gameOn) {
     rl.identifyColor(); // Identify sensor colors
 
+    if (rl.color2 == "White"){
+      while(rl.color2 == "White"){
+        rl.identifyColor();
+        motors.setSpeeds(400,-350);
+      }
+      rl.whiteCount = 0;
+      rl.color2 = "";
+    } 
+
+
+
+
+
+
+
     if (rl.color4 == "Gray" && rl.color8 == "Black"){ //&& rl.color4 == "White"){
         Serial.println("Ik ga Rechts");
         turnRight();
@@ -25,10 +40,10 @@ void LineFollower::followLine() {
     if (rl.color8 == "Brown"){
         Serial.println("Ik ga naar block");
         Zumo32U4ButtonB bB;
-        motors.setSpeeds(200,200);
-        delay(2000);
+        // motors.setSpeeds(200,200);
+        // delay(2000);
         motors.setSpeeds(0,0);
-        delay(10000);
+        delay(5000);
         rl.color8 = "";
     }
   
@@ -67,8 +82,6 @@ void LineFollower::followLine() {
     //   }
     // }
     // updateOnGreenLine();
-     
-
     int error = rl.position - 2000;
     int leftSpeed, rightSpeed;
     leftSpeed = maxSpeed + calculateSpeedDifference(error);
@@ -92,7 +105,7 @@ void LineFollower::turnLeft() {
 
     Serial.println("BIDEN");
     
-    motors.setSpeeds(0, 200);
+    motors.setSpeeds(-100, 200);
     delay(700);
     rl.color4 = "";
     rl.color8 = "";
@@ -102,7 +115,7 @@ void LineFollower::turnLeft() {
 void LineFollower::turnRight() {
     Serial.println("TRUMP");
 
-    motors.setSpeeds(200, 0);
+    motors.setSpeeds(200, -100);
     delay(700);
     rl.color4 = "";
     rl.color8 = "";

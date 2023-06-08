@@ -13,6 +13,7 @@ class readLine {
   
 private:
   Zumo32U4LineSensors lineSensors;
+  Zumo32U4LineSensors lineSensorsGreen;
   uint16_t lineSensorValues[NUM_SENSORS];
   uint16_t lineSensorPos[NUM_SENSORS];
   String getSideColor(int);
@@ -28,8 +29,8 @@ public:
   int leftGreyCount = 0;
   int leftBlackCount = 0;
   int brownCount = 0;
-  String last0color = "White";
-  String last4color = "White";
+  int whiteCount =0;
+
   int count0 = 0;
   int count4 = 0;
   String color0;
