@@ -9,19 +9,48 @@ LineFollower::LineFollower() : gameOn(true){
 
 void LineFollower::followLine() {
 
-  //gyro.init(); // Initialize gyro
+  gyro.init(); // Initialize gyro
+  
 
   while (gameOn) {
     rl.identifyColor(); // Identify sensor colors
 
-    if (rl.color2 == "White"){
-      while(rl.color2 == "White"){
-        rl.identifyColor();
-        motors.setSpeeds(400,-350);
-      }
-      rl.whiteCount = 0;
-      rl.color2 = "";
-    } 
+    // if (rl.color2 == "White"){
+    //    while(rl.color2 == "White"){
+    //      rl.identifyColor();
+    //      motors.setSpeeds(400,-350);
+    //     }
+    //     rl.whiteCount = 0;
+    //     rl.color2 = "";
+      
+    // } 
+
+
+    if (rl.color8 == "Gray" && rl.brownCount == 0) {
+      setMotorSpeeds(0, 0);
+      delay(1500);
+      
+      // while (true) {
+      //    pauseMovement();
+      //    if (!isPitchBelowZero()){
+      //      break;
+      //    }
+      // }
+      rl.color8 = "";
+      rl.brownCount++;
+    }
+    if (rl.color8 == "Gray" && rl.brownCount > 0) {
+      Serial.println("Ik ga naar block");
+      motors.setSpeeds(100,100);
+      delay(2000);
+      motors.setSpeeds(0,0);
+      delay(5000);
+      rl.color8 = "";
+      rl.brownCount = 0;
+    }
+        
+  
+
 
 
 
@@ -37,65 +66,28 @@ void LineFollower::followLine() {
         Serial.println("Ik ga Links");
         turnLeft();
     }
-    if (rl.color8 == "Brown"){
-        Serial.println("Ik ga naar block");
-        Zumo32U4ButtonB bB;
-        // motors.setSpeeds(200,200);
-        // delay(2000);
-        motors.setSpeeds(0,0);
-        delay(5000);
-        rl.color8 = "";
-    }
+
   
-    // } 
-    // else if (rl.color4 == "Gray" && rl.color0 == "White") {
-    //   Serial.println("Ik ga Rechts");
-
-    //   while(true){
-    //     rl.identifyColor();
-    //     if (rl.color4=="Black"){
-    //       turnRight();
-    //       break;
-    //     }
-    //   }
-      
-    // }  
-    // else if (rl.color0 == "Gray" && rl.color4 == "Gray") {
-    //   pauseMovement();
-    //   delay(750);
-    //   goLeft = false;
-    //   goRight = false;
-    // } 
-
-    // if (goLeft && !goRight) {
-    //   if (rl.color0 == "Black") {
-    //     Serial.println("LINKS");
-        
-    //     goLeft = false;
-    //   }
-    // }
-    // if (goRight && !goLeft) {
-    //   if (rl.color4 == "Black") {
-    //     Serial.println("TRUMP");
-    //     turnRight();
-    //     goRight = false;
-    //   }
-    // }
-    // updateOnGreenLine();
     int error = rl.position - 2000;
     int leftSpeed, rightSpeed;
     leftSpeed = maxSpeed + calculateSpeedDifference(error);
     rightSpeed = maxSpeed - calculateSpeedDifference(error);
     lastError = error;
-    setMotorSpeeds(leftSpeed, rightSpeed);
+
+    if (rl.color2 == "Green") {
+      setMotorSpeeds((leftSpeed/2), (rightSpeed/2));
+     }
+    else {
+      setMotorSpeeds(leftSpeed, rightSpeed);
+    }
   }
 }
 
 
-// bool LineFollower::isPitchBelowZero() {
-//   double pitch = gyro.calculatePitch();
-//   return (pitch < 0);
-// }
+bool LineFollower::isPitchBelowZero() {
+  double pitch = gyro.calculatePitch();
+  return (pitch < 0);
+}
 
 void LineFollower::pauseMovement() {
   motors.setSpeeds(0, 0); // Pause movement
@@ -106,7 +98,7 @@ void LineFollower::turnLeft() {
     Serial.println("BIDEN");
     
     motors.setSpeeds(-100, 200);
-    delay(700);
+    delay(500);
     rl.color4 = "";
     rl.color8 = "";
 
@@ -116,7 +108,7 @@ void LineFollower::turnRight() {
     Serial.println("TRUMP");
 
     motors.setSpeeds(200, -100);
-    delay(700);
+    delay(500);
     rl.color4 = "";
     rl.color8 = "";
 }
@@ -131,7 +123,7 @@ String LineFollower::getColor() {
 }
 
 int LineFollower::calculateSpeedDifference(int error) {
-  return error / 4 + 6 * (error - lastError);
+  return error + 3 * (error - lastError);
 }
 
 void LineFollower::setMotorSpeeds(int leftSpeed, int rightSpeed) {
