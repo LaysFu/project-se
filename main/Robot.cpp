@@ -1,6 +1,6 @@
 #include "Robot.h"
 
-Robot::Robot() : gameOn(true){}
+Robot::Robot() : gameOn(true), gameOver(false){}
 
 void Robot::main(){
 
@@ -12,7 +12,7 @@ void Robot::main(){
         blocky.findBlock();
         blocky.lineUpBlock();
         blocky.pushBlock();
-        gameOver = blocky.gameOver();
+        gameOver = blocky.checkWin();
         if(gameOver){ return }
     }
 

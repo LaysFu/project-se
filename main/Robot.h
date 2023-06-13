@@ -8,6 +8,7 @@
 class Robot{
     private:
         bool gameOn; //start mainLoop
+        bool gameOver; //stopt als gameOver
         readLine RL;
         LineFollower LF;
         Block blocky

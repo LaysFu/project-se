@@ -34,7 +34,7 @@ public:
   int leftBlackCount = 0;
   int brownCount = 0;
  
-  String color0, color2, color4, color8;
+  String color0 = "", color2 = "", color4 = "", color8 = "";
   void identifyColor();
   void lineRider();
 };
