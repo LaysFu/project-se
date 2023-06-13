@@ -9,7 +9,13 @@ readLine::readLine() : doubleGrey(0), doubleBrown(0) {
 }
 
 void readLine::setup(){
-
+  bB.waitForButton();
+  Grey = (lineSensorValues[0] + lineSensorValues[4]) / 2;
+  bB.waitForButton();
+  Brown = (lineSensorValues[0] + lineSensorValues[4]) / 2;
+  bB.waitForButton();
+  Black = (lineSensorValues[0] + lineSensorValues[4]) / 2;
+  bA.waitForButton();
 }
 
 void readLine::calibrateLineSensors() {

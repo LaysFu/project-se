@@ -13,8 +13,8 @@ void Motors::motorCalculations(){
 void Motors::setMotorSpeeds(int i) {
     motorCalculations();
 
-    leftSpeed = constrain(leftSpeed, 0, maxSpeed);
-    rightSpeed = constrain(rightSpeed, 0, maxSpeed);
+    leftSpeed = constrain(leftSpeed, -200, maxSpeed);
+    rightSpeed = constrain(rightSpeed, -200, maxSpeed);
     motors.setSpeeds((leftSpeed/i), (rightSpeed/i));
 }
 
@@ -23,11 +23,11 @@ void Motors::calculateSpeedDifference(int error) {
 }
 
 void Motors::turnLeft() {
-    setSpeeds(0, 200);
-    delay(700);
+    setSpeeds(-100, 300);
+    delay(500);
 }
 
 void Motors::turnRight() {
-    setSpeeds(200, 0);
-    delay(700);
+    setSpeeds(300, -100);
+    delay(500);
 }

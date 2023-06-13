@@ -19,11 +19,11 @@ void Block::pushBlock(){
       blockLinedUp = true;
     }
     else if (left_sensor >= 5 && right_sensor < 5) {
-      motor.setSpeeds(150, 300);
+      motor.setSpeeds(-400, 300);
       blockLinedUp = true;
     }
     else if (left_sensor < 5 && right_sensor >= 5) {
-      motor.setSpeeds(300, 150);
+      motor.setSpeeds(300, -400);
       blockLinedUp = true;
     }
     else { blockLinedUp = false; }

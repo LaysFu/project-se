@@ -27,6 +27,10 @@ private:
 public:
   readLine();
 
+  int Grey;
+  int Brown;
+  int Black;
+
   int doubleGrey, doubleBrown;
   int rightGreyCount = 0;
   int rightBlackCount = 0;
