@@ -8,25 +8,43 @@ readLine::readLine() {
   lineSensors.emittersOn();
 }
 
+void readLine::setup(){
+  Serial.println("Read Grey: ");
+  bB.waitForButton();
+  Grey = (lineSensorValues[0] + lineSensorValues[4]) / 2;
+  Serial.println("Read Brown: ");
+  bB.waitForButton();
+  Brown = (lineSensorValues[0] + lineSensorValues[4]) / 2;
+}
+
 void readLine::identifyColor() {
   position = lineSensors.readLine(lineSensorPos);  
   lineSensors.readCalibrated(lineSensorValues);
   //Serial.println(position);
-  if (lineSensorValues[2] < 50) {
-    whiteCount++;
-  }
-  else { whiteCount = 0; }
+  // if (lineSensorValues[2] < 50) {
+  //   whiteCount++;
+  // }
+  // else { whiteCount = 0; }
   if (lineSensorValues[2] > 100 && lineSensorValues[2] < 200){
     color2 = "Green";
   }
-  Serial.print("Links");
-  Serial.println(lineSensorValues[0]);
-  Serial.print("Rechts");
-  Serial.println(lineSensorValues[4]);
-  if((lineSensorValues[0] >= 250 && lineSensorValues[0] <= 350) && lineSensorValues[4] >= 280 && lineSensorValues[4] <= 350) {
-    brownCount++;
+  else {color2 = "Black";}
+
+  //Serial.print("\nLinks ");
+  //Serial.println(lineSensorValues[0]); 
+  //Serial.println();
+  //Serial.print("Rechts ");
+  //Serial.println(lineSensorValues[4]);
+  // if((lineSensorValues[0] - Brown && lineSensorValues[0] <= 499) && lineSensorValues[4] >= 330 && lineSensorValues[4] <= 499) {
+  //   brownCount++;
+  //   Serial.println("hi brown");
+  // }
+  if ((lineSensorValues[0] >= 200 && lineSensorValues[0] <=  480) && (lineSensorValues[4] >= 200 && lineSensorValues[4] <= 480)) {
+    greyCount++;
   }
-  if(lineSensorValues[0] >= 180 && lineSensorValues[0] <=  230){ 
+
+
+  if(lineSensorValues[0] >= 200 && lineSensorValues[0] <=  480){ 
           leftGreyCount++; 
           leftBlackCount =0;
   }
@@ -34,7 +52,7 @@ void readLine::identifyColor() {
           leftBlackCount++; 
           leftGreyCount =0;
         }
-  if(lineSensorValues[4] >= 150 && lineSensorValues[4] <= 200 ){ 
+  if(lineSensorValues[4] >= 200 && lineSensorValues[4] <= 480 ){ 
           rightGreyCount++; 
           rightBlackCount =0;
   }
@@ -43,12 +61,12 @@ void readLine::identifyColor() {
           rightGreyCount =0;
   }
   if (leftGreyCount >= 4){
-      Serial.println("Grey");
+      //Serial.println("Grey");
         color0 = "Gray";
         leftGreyCount = 0; 
     }
   if (rightGreyCount >= 4) {
-        Serial.println("Grey");
+        //Serial.println("Grey");
         color4 = "Gray";
         rightGreyCount = 0; 
       }
@@ -60,15 +78,19 @@ void readLine::identifyColor() {
     leftBlackCount = 0;
     rightBlackCount =0;
   }
-  if (brownCount > 2){
-    Serial.println("Brown");
-    color8 = "Brown";
-    brownCount = 0;
+  // if (brownCount > 0){
+  //   Serial.println("Brown");
+  //   color8 = "Brown";
+  //   brownCount = 0;
+  // }
+  // if(whiteCount > 50){
+  //   color2 = "White";
+  // }
+  if(greyCount >= 4) {
+    //Serial.println("Double Grey");
+    color8 = "Gray";
+    greyCount =0;
   }
-  if(whiteCount > 50){
-    color2 = "White";
-  }
-
   
   
     // Serial.print("Sensor Left: ");
