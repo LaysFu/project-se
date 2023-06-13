@@ -1,21 +1,33 @@
 #include "Motors.h"
 
+Motors::Motors(){}
+
 void Motors::motorCalculations(){
-  	error = rl.position - 2000;
+  	error = rl.position - 1500;
 
     leftSpeed = maxSpeed + calculateSpeedDifference(error);
     rightSpeed = maxSpeed - calculateSpeedDifference(error);
     lastError = error;
 }
 
-void Motors::setMotorSpeeds() {
+void Motors::setMotorSpeeds(int i) {
     motorCalculations();
 
     leftSpeed = constrain(leftSpeed, 0, maxSpeed);
     rightSpeed = constrain(rightSpeed, 0, maxSpeed);
-    motors.setSpeeds(leftSpeed, rightSpeed);
+    motors.setSpeeds((leftSpeed/i), (rightSpeed/i));
 }
 
 void Motors::calculateSpeedDifference(int error) {
     return error / 4 + 6 * (error - lastError);
+}
+
+void Motors::turnLeft() {
+    setSpeeds(0, 200);
+    delay(700);
+}
+
+void Motors::turnRight() {
+    setSpeeds(200, 0);
+    delay(700);
 }

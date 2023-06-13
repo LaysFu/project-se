@@ -11,16 +11,12 @@ class LineFollower {
     readLine& rl;
     Gyro gyro;
 
-    const int maxSpeed = 200;
-
+    uint16_t position;
     bool isPitchBelowZero();
-    
 
   public:
     LineFollower(readLine&);
-    void followLine();
-    void setMotorSpeeds();
-    void lineRider();
+    void followLine();   
 };
 
 #endif

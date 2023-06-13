@@ -1,44 +1,32 @@
 #include "Block.h"
 
-Block::Block(readLine& readline) : blockRL(readLine), blockLinedUp(false), 
-                                    left_sensor(0), right_sensor(0) {  
+Block::Block(readLine& readline) : blockRL(readLine), blockLinedUp(false) {  
     proxySensy.initThreeSensors();
 }
 
-void Block::readProxySensors(){
-    proxySensy.read();
-    left_sensor = proxySensy.countsFrontWithLeftLeds();
-    right_sensor = proxySensy.countsFrontWithRightLeds();
-};
-
 bool Block::findBlock(){
-    readProxySensors();
-    if (left_sensor || right_sensor) {
-        return true;
+    // Draai tot block gevonden is
+    if (PS.left_sensor <= 1 && right_sensor <= 1) {
+        motor.setSpeeds(100, -100);
+        delay(1000);
     }
-    return false;
-}
-
-void Block::lineUpBlock(){
-  // draai om te zorgen dat block in midden van zumo staat
-  if (left_sensor <= 1 && right_sensor <= 1) {
-    motor.setSpeeds(100, -100);
-    delay(1000);
     motor.setSpeeds(0, 0);
-  }
 }
 
 void Block::pushBlock(){   
     if (left_sensor > 1 && right_sensor > 1) {
       motor.setSpeeds(200, 200);
+      blockLinedUp = true;
     }
     else if (left_sensor >= 5 && right_sensor < 5) {
       motor.setSpeeds(150, 300);
+      blockLinedUp = true;
     }
     else if (left_sensor < 5 && right_sensor >= 5) {
       motor.setSpeeds(300, 150);
+      blockLinedUp = true;
     }
-    blockLinedUp = true;
+    else { blockLinedUp = false; }
     delay(10);
 }
 
@@ -52,3 +40,6 @@ bool Block::checkWin() {
     return false;
 }
 
+void Block::readProxy(){
+    PS.readProxySensors();
+};

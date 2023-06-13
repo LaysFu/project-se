@@ -1,5 +1,5 @@
-#include "HardwareSerial.h"
-#include "USBAPI.h"
+// #include "HardwareSerial.h"
+// #include "USBAPI.h"
 #include "readLine.h"
 
 readLine::readLine() : doubleGrey(0), doubleBrown(0) {
@@ -12,8 +12,23 @@ void readLine::setup(){
 
 }
 
-void readLine::lineRider() {
-  position = lineSensors.readLine(lineSensorPos);
+void readLine::calibrateLineSensors() {
+  Motors motor;
+  Serial.println("Start calibrating!");
+  delay(1000);
+  for (uint16_t i = 0; i < 120; i++) {
+    if (i > 30 && i <= 90) {
+      motor.setSpeeds(-200, 200);
+    } else {
+      motor.setSpeeds(200, -200);
+    }
+    lineSensors.calibrate();
+  }
+  motor.setSpeeds(0, 0);
+}
+
+uint16_t readLine::lineRider() {
+  return lineSensors.readLine(lineSensorPos);
 }
 
 void readLine::identifyColor() {
@@ -62,19 +77,4 @@ void readLine::identifyColor() {
     color8 = "Brown";
     brownCount = 0;
   }  
-}
-
-void readLine::calibrateLineSensors() {
-  Zumo32U4Motors motor;
-  Serial.println("Start calibrating!");
-  delay(1000);
-  for (uint16_t i = 0; i < 120; i++) {
-    if (i > 30 && i <= 90) {
-      motor.setSpeeds(-200, 200);
-    } else {
-      motor.setSpeeds(200, -200);
-    }
-    lineSensors.calibrate();
-  }
-  motor.setSpeeds(0, 0);
 }

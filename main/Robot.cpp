@@ -5,11 +5,10 @@ Robot::Robot() : gameOn(true){}
 void Robot::main(){
 
     while(gameOn){
-        LF.lineRider();
-        gameOn = LF.followLine();
-        LF.setMotorSpeeds();        
+        gameOn = LF.followLine();       
     }
     if(!gameOn){
+        blocky.readProxy();
         blocky.findBlock();
         blocky.lineUpBlock();
         blocky.pushBlock();
