@@ -2,19 +2,24 @@
 #include "USBAPI.h"
 #include "readLine.h"
 
-readLine::readLine() {
+readLine::readLine() : doubleGrey(0), doubleBrown(0) {
   lineSensors.initFiveSensors();
   calibrateLineSensors();
   lineSensors.emittersOn();
 }
 
-void readLine::identifyColor() {
+void readLine::setup(){
+
+}
+
+void readLine::lineRider() {
   position = lineSensors.readLine(lineSensorPos);
+}
+
+void readLine::identifyColor() {
   lineSensors.readCalibrated(lineSensorValues);
   
 
-  Serial.println(lineSensorValues[0]);
-  Serial.println(lineSensorValues[4]);
   if((lineSensorValues[0] >= 280 && lineSensorValues[0] <= 350) && lineSensorValues[0] >= 280 && lineSensorValues[0] <= 350) {
     brownCount++;
   }
@@ -56,20 +61,7 @@ void readLine::identifyColor() {
     Serial.println("Brown");
     color8 = "Brown";
     brownCount = 0;
-  }
-
-  
-  
-    // Serial.print("Sensor Left: ");
-    // Serial.println(color0);
-  
-    // // Serial.print("Sensor Mid: ");
-    // // Serial.println(color2);
-    // Serial.print("Sensor Right: ");
-    // Serial.println(color4);
-    // Serial.println();
-
-  
+  }  
 }
 
 void readLine::calibrateLineSensors() {
@@ -85,26 +77,4 @@ void readLine::calibrateLineSensors() {
     lineSensors.calibrate();
   }
   motor.setSpeeds(0, 0);
-}
-
-String readLine::getSideColor(int i) {
-  if (lineSensorValues[i] >= sideBlackMin && lineSensorValues[i] <= sideBlackMax) {
-    return "Black";
-  } else if (lineSensorValues[i] >= sideBrownMin && lineSensorValues[i] <= sideBrownMax) {
-    return "Brown";
-  } else if (lineSensorValues[i] >= sideGrayMin && lineSensorValues[i] <= sideGrayMax) {
-    return "Gray";
-  } else {
-    return "White";
-  }
-}
-
-String readLine::getMidColor(int i) {
-  if (lineSensorValues[i] >= middleBlackMin && lineSensorValues[i] <= middleBlackMax) {
-    return "Black";
-  } else if (lineSensorValues[i] >= middleGreenMin && lineSensorValues[i] <= middleGreenMax) {
-    return "Green";
-  } else {
-    return "White";
-  }
 }
