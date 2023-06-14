@@ -10,7 +10,7 @@ void Gyro::init() {
 
 double Gyro::calculatePitch() {
   imu.readAcc();
-  double pitch = imu.a.x * 0.01;
+  pitch = imu.a.x * 0.01;
   return pitch;
 }
 

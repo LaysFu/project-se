@@ -5,10 +5,12 @@
 
 class Motors : public Zumo32U4Motors {
     private: 
+        Zumo32U4Buzzer buzzer;
         int error, lastError = 0;
         int leftSpeed, rightSpeed;
         const int maxSpeed = 350;
 
+        // Voor PID controller
         int calculateSpeedDifference(int);
         void motorCalculations();
 
@@ -16,9 +18,25 @@ class Motors : public Zumo32U4Motors {
         Motors();
         ~Motors() = default;
 
+        // PID controller
         void setMotorSpeeds(int);
+        // Grey bochten
         void turnLeft();
         void turnRight();
+
+        // Handbediening
+        void forward() 
+        void backward()
+        void left() 
+        void right() 
+        void bLeft() 
+        void bRight() 
+        void stop() 
+        void playSong() 
+        void stopSong() 
 }
 
-#endif // MOTORS_H
+#endif // MOTORS_Hclass ZumoMotors {
+
+
+

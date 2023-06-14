@@ -11,9 +11,6 @@ class Block{
         // bool voor logic
         bool blockLinedUp;
 
-        // lees proxy sensor uit
-        void readProxy();  
-
     public: 
         Block(readLine&);
         ~Block() = default;
@@ -23,5 +20,7 @@ class Block{
         // als blockLinedUp duw block 
         void pushBlock();
         // als blockLinedUp en line geregistreerd stop
-        bool checkWin();     
+        bool checkWin();  
+        // lees proxy sensor uit
+        void readProxy();     
 };

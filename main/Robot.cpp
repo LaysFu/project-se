@@ -1,20 +1,23 @@
 #include "Robot.h"
 
-Robot::Robot() : gameOn(true), gameOver(false){}
+Robot::Robot() : gameOn(false), gameOver(true){}
 
 void Robot::main(){
-
-    while(gameOn){
-        gameOn = LF.followLine();       
+    if (gameOver){
+        Serial.println("Handbediening");
     }
-    if(!gameOn){
-        blocky.readProxy();
-        blocky.findBlock();
-        blocky.lineUpBlock();
-        blocky.pushBlock();
-        gameOver = blocky.checkWin();
-        if(gameOver){ return }
+    if (!gameOver){
+        while(gameOn){
+            gameOn = LF.followLine();       
+        }
+        if(!gameOn){
+            blocky.readProxy();
+            blocky.findBlock();
+            blocky.lineUpBlock();
+            blocky.pushBlock();
+            gameOver = blocky.checkWin();
+            if(gameOver){ return }
+        }
     }
-
 }
 

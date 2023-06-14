@@ -12,5 +12,6 @@ void loop()
 {
   Robot Zumo;
   readLine RL;
+  RL.setup();
   Zumo.main();
 }

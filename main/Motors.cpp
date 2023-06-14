@@ -31,3 +31,43 @@ void Motors::turnRight() {
     setSpeeds(300, -100);
     delay(500);
 }
+
+
+// Start handbediening methodes------------------------------------------------------------------------
+
+
+void Motors::forward() {
+    setSpeeds(200, 200); 
+}
+
+void Motors::backward() {
+    setSpeeds(-200, -200);
+}
+
+void Motors::left() {
+    setSpeeds(50, 300);
+}
+
+void Motors::right() {
+    setSpeeds(300, 50);
+}
+
+void Motors::bLeft() {
+    setSpeeds(-50, -300);
+}
+
+void Motors::bRight() {
+    setSpeeds(-300, -50);
+}
+
+void Motors::stop() {
+    setSpeeds(0, 0);
+}
+
+void Motors::playSong() {
+    buzzer.playFromProgramSpace(CrabRaveSong::song);
+}
+
+void Motors::stopSong() {
+    buzzer.stopPlaying();
+}

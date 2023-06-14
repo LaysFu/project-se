@@ -1,14 +1,24 @@
 // #include "HardwareSerial.h"
 // #include "USBAPI.h"
 #include "readLine.h"
+#include "Motors.h"
+#include <Zumo32U4Buttons.h>
 
-readLine::readLine() : doubleGrey(0), doubleBrown(0) {
-  lineSensors.initFiveSensors();
-  calibrateLineSensors();
-  lineSensors.emittersOn();
+readLine::readLine() : Green(1), index(0){
+  for (int i : leftAR) { leftAR[i] = 0; }
+  for (int i : rightAR) { rightAR[i] = 0; }
 }
 
 void readLine::setup(){
+  // basic setup
+  lineSensors.initFiveSensors();
+  lineSensors.emittersOn();
+  Zumo32U4ButtonA bA;
+  Zumo32U4ButtonB bB;
+
+  
+  calibrateLineSensors();
+  // calibrate all colors
   bB.waitForButton();
   Grey = (lineSensorValues[0] + lineSensorValues[4]) / 2;
   bB.waitForButton();
@@ -34,53 +44,56 @@ void readLine::calibrateLineSensors() {
 }
 
 uint16_t readLine::lineRider() {
-  return lineSensors.readLine(lineSensorPos);
+  return lineSensorPos.readLine(lineSensorPos);
 }
 
 void readLine::identifyColor() {
   lineSensors.readCalibrated(lineSensorValues);
-  
+  leftAR[index] = lineSensorValues[0];
+  rightAR[index] = lineSensorValues[4];
+  index++;
+}
 
-  if((lineSensorValues[0] >= 280 && lineSensorValues[0] <= 350) && lineSensorValues[0] >= 280 && lineSensorValues[0] <= 350) {
-    brownCount++;
-  }
-  if(lineSensorValues[0] >= 200 && lineSensorValues[0] <=  250){ 
-          leftGreyCount++; 
-          leftBlackCount =0;
-  }
-  else if(lineSensorValues[0] >= 500){ 
-          leftBlackCount++; 
-          leftGreyCount =0;
-        }
-  if(lineSensorValues[4] >= 150 && lineSensorValues[4] <= 200 ){ 
-          rightGreyCount++; 
-          rightBlackCount =0;
-  }
-  else if(lineSensorValues[4] >= 500){ 
-          rightBlackCount++; 
-          rightGreyCount =0;
-  }
-  if (leftGreyCount >= 4){
-      Serial.println("Grey");
-        color0 = "Gray";
-        leftGreyCount = 0; 
+void readLine::checkHistory(){
+  unsigned long currentMillis = millis();
+
+  if (currentMillis - previousMillis >= INTERVAL) {
+    previousMillis = currentMillis;
+    int highestLeft = 0;
+    int highestRight = 0;
+    for (int i : leftAR) {
+      if (highestLeft < leftAR[i]){ highestLeft = leftAR[i]; }
+      if (highestRight < rightAR[i]){ highestRight = rightAR[i]; } 
+      Serial.println(" " + leftAR[i]);
+      Serial.println(" " + rightAR[i]);    
     }
-  if (rightGreyCount >= 4) {
-        Serial.println("Grey");
-        color4 = "Gray";
-        rightGreyCount = 0; 
-      }
-  if (leftBlackCount > 5 || rightBlackCount > 5){
-    Serial.println("Black");
-    color8 = "Black";
-    leftGreyCount = 0;
-    rightGreyCount = 0; 
-    leftBlackCount = 0;
-    rightBlackCount =0;
+    inRangeCheck(highestLeft, highestRight);
   }
-  if (brownCount > 4){
-    Serial.println("Brown");
-    color8 = "Brown";
-    brownCount = 0;
-  }  
+}
+
+void readLine::inRangeCheck(int highL, int highR){
+  if ( highL == 1000) { BlackSeen[0] = true; }
+  if ( highR == 1000) { BlackSeen[1] = true; return; }
+  // if (highL >= (Grey-RANGE) && highL <= (Grey+RANGE)) { Grey[0] = true }
+  // if (highR >= (Grey-RANGE) && highL <= (Grey+RANGE)) { Grey[2] = true }
+  // if (highL >= (Brown-RANGE) && highL <= (Brown+RANGE)) { Brown[0] = true }
+  // if (highR >= (Brown-RANGE) && highL <= (Brown+RANGE)) { Brown[2] = true }
+
+  // als dit niet werkt weer naar bovenste gaan
+  if ( (highL-(Grey+RANGE))*(highL-(Grey-RANGE)) <= 0) { GreySeen[0] = true; }
+  if ( (highR-(Grey+RANGE))*(highR-(Grey-RANGE)) <= 0) { GreySeen[1] = true; return; }
+  if ( (highL-(Brown+RANGE))*(highL-(Brown-RANGE)) <= 0) { BrownSeen[0] = true; }
+  if ( (highR-(Brown+RANGE))*(highL-(Brown-RANGE)) <= 0) { throw; }
+}
+
+int readLine::checkGreen(){
+  return (lineSensorValues[2] >= 100 && lineSensorValues[2] <= 200) ? 2 : 1;
+}
+
+void resetSeen(){
+  for (int i : GreySeen){
+    GreySeen[i] = false;
+    BrownSeen[i] = false;
+    BlackSeen[i] = false;
+  }
 }

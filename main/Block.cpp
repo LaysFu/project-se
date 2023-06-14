@@ -14,15 +14,15 @@ bool Block::findBlock(){
 }
 
 void Block::pushBlock(){   
-    if (left_sensor > 1 && right_sensor > 1) {
+    if (PS.left() > 1 && PS.right() > 1) {
       motor.setSpeeds(200, 200);
       blockLinedUp = true;
     }
-    else if (left_sensor >= 5 && right_sensor < 5) {
+    else if (PS.left() >= 5 && PS.right() < 5) {
       motor.setSpeeds(-400, 300);
       blockLinedUp = true;
     }
-    else if (left_sensor < 5 && right_sensor >= 5) {
+    else if (PS.left() < 5 && PS.right() >= 5) {
       motor.setSpeeds(300, -400);
       blockLinedUp = true;
     }

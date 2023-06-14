@@ -8,10 +8,13 @@ LineFollower::LineFollower(readLine& readline) : rl(readline){
 }
 
 bool LineFollower::followLine() {
+    rl.identifyColor(); // Leest sensors in
+
     try{
-      rl.identifyColor(); // Identify sensor colors
+      rl.checkHistory(); // checkt per 1000ms History
     }
-    catch(...){
+    catch(...){// als dubbel bruin is gevonden
+      Serial.println("Brown gevonden")
       motors.setSpeeds(200,200);
       delay(2000);
       motors.setSpeeds(0,0);
@@ -19,25 +22,39 @@ bool LineFollower::followLine() {
       return false;
     }
 
-    position = rl.lineRider();
+    position = rl.lineRider(); // Leest positie voor PID
 
-    if (rl.color4 == "Gray" && rl.color8 == "Black"){
-        motors.turnRight();
-        rl.color4 = "";
-        rl.color8 = "";
-    }
-    if (rl.color0 == "Gray" && rl.color8 == "Black"){ 
-        motors.turnLeft();
-        rl.color0 = "";
-        rl.color8 = "";
+    unsigned long currentMillis = millis();
+
+    if (currentMillis - previousMillis >= 1000) {
+      previousMillis = currentMillis;
+      if (rl.GreySeen[0] || rl.GreySeen[1]){
+        checkGrey();
+      }
     }
     
-    if (rl.color2 == "Green"){ 
-      motor.setMotorSpeeds(2); 
-    } else {
-      motor.setMotorSpeeds(1); 
-    }
 
-
+    motor.setMotorSpeeds(rl.checkGreen()); 
     return true;
+}
+
+void LineFollower::checkGrey(){
+  if (rl.GreySeen[0] && rl.GreySeen[1]) {
+    motor.setSpeed(0,0);
+    while(!gyro.isPitchBelowZero()){
+      Serial.println("Wip it real good!");
+    }
+    rl.resetSeen();
+    return
+  }
+  if ( (rl.GreySeen[0] && rl.BlackSeen[0]) && !rl.GreySeen[1]){
+    motor.turnLeft();
+    rl.resetSeen();
+    return;
+  }
+  if ( (rl.GreySeen[1] && rl.BlackSeen[1]) && !rl.GreySeen[0]){
+    motor.turnRight();
+    rl.resetSeen();
+    return;
+  }
 }
