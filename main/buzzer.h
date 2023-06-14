@@ -13,6 +13,15 @@ class Buzzer : public Zumo32U4Buzzer{
         void melodyOne();
         void melodyTwo();
         void melodyThree();
+        void C();
+        void D();
+        void E();
+        static const char melOne[] PROGMEM;
+        static const char melTwo[] PROGMEM;
+        static const char melThree[] PROGMEM;
+        static const char toneC[] PROGMEM;
+        static const char toneD[] PROGMEM;
+        static const char toneE[] PROGMEM;
         static const char song[] PROGMEM;
 };
 
