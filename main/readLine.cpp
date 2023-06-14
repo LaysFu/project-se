@@ -24,7 +24,7 @@ void readLine::setup(){
 
   // calibrate all colors
   bB.waitForButton();
-  b.melodyOne();
+  buzzer.melodyOne();
   lineSensors.readCalibrated(lineSensorValues);
   GreyL = lineSensorValues[0];
   GreyR = lineSensorValues[4];
@@ -42,15 +42,7 @@ void readLine::setup(){
   Serial1.print("Rechts: ");
   Serial1.println(BrownR);
   bA.waitForButton();
-  b.melodyOne();
-  Grey = (lineSensorValues[0] + lineSensorValues[4]) / 2;
-  buzzer.melodyOne();
-  bB.waitForButton();
-  Brown = (lineSensorValues[0] + lineSensorValues[4]) / 2;
-  buzzer.melodyTwo();
-  bB.waitForButton();
-  Black = (lineSensorValues[0] + lineSensorValues[4]) / 2;
-  buzzer.melodyThree();
+  
 }
 
 void readLine::calibrateLineSensors() {

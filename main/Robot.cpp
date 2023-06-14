@@ -9,7 +9,7 @@ void Robot::main(){
     //     setupDone = Cont.Controller();
     // }
     if (!setupDone) { 
-        Serial1.println("Doing setup");
+        // Serial1.println("Doing setup");
         rl.setup(); 
         Zumo32U4ButtonA bA;
         bA.waitForButton();
