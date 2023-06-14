@@ -9,11 +9,10 @@
 class ControllerClass {
 
 private:
-    Buzzer& player;
+    Buzzer player;
     Motors motor;
 
 public:
-    ControllerClass(Buzzer&);
     bool Controller();
 };
 

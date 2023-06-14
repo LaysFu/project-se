@@ -3,6 +3,7 @@
 
 #include "readLine.h"
 #include "gyro.h"
+#include "Motors.h"
 
 class LineFollower {
   private:
@@ -11,10 +12,11 @@ class LineFollower {
     Gyro gyro;
 
     uint16_t position;
+    unsigned long previousMillis =0;
 
   public:
-    LineFollower(readLine&, Motors&);
-    void followLine();
+    LineFollower(readLine&);
+    bool followLine();
     void checkGrey();   
 };
 

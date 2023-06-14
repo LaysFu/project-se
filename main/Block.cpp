@@ -1,12 +1,12 @@
 #include "Block.h"
 
-Block::Block(readLine& readline) : blockRL(readLine), blockLinedUp(false) {  
-    proxySensy.initThreeSensors();
+Block::Block(readLine& rl) : blockRL(rl), blockLinedUp(false) {  
+    PS.initThreeSensors();
 }
 
 bool Block::findBlock(){
     // Draai tot block gevonden is
-    if (PS.left_sensor <= 1 && right_sensor <= 1) {
+    if (PS.left() <= 1 && PS.right() <= 1) {
         motor.setSpeeds(100, -100);
         delay(1000);
     }
@@ -33,9 +33,7 @@ void Block::pushBlock(){
 bool Block::checkWin() {
     // check if blockLinedUp = true; if linesensor registreerd line, stop. 
     if (blockLinedUp){
-        if (blockRL.color2 == 1000) {
-          return true;
-        }
+        return blockRL.checkBlack();
     }
     return false;
 }

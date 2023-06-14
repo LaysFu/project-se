@@ -2,7 +2,7 @@
 // #include "USBAPI.h"
 #include "LineFollower.h"
 
-LineFollower::LineFollower(readLine& readline) : rl(readline){
+LineFollower::LineFollower(readLine& rl) : rl(rl){
   gyro.init(); // Initialize gyro
   Serial.println("Linefollower created!");
 }
@@ -10,11 +10,12 @@ LineFollower::LineFollower(readLine& readline) : rl(readline){
 bool LineFollower::followLine() {
     rl.identifyColor(); // Leest sensors in
 
-    try{
+    //try{
       rl.checkHistory(); // checkt per 1000ms History
-    }
-    catch(...){// als dubbel bruin is gevonden
-      Serial.println("Brown gevonden")
+    //}
+    //catch(...){// als dubbel bruin is gevonden .... (Werkt blijkbaar niet met arduino)
+    if (rl.BrownSeen[0] && rl.BrownSeen[1]){
+      Serial.println("Brown gevonden");
       motors.setSpeeds(200,200);
       delay(2000);
       motors.setSpeeds(0,0);
@@ -34,26 +35,26 @@ bool LineFollower::followLine() {
     }
     
 
-    motor.setMotorSpeeds(rl.checkGreen()); 
+    motors.setMotorSpeeds(rl.checkGreen(), position); 
     return true;
 }
 
 void LineFollower::checkGrey(){
   if (rl.GreySeen[0] && rl.GreySeen[1]) {
-    motor.setSpeed(0,0);
+    motors.setSpeeds(0,0);
     while(!gyro.isPitchBelowZero()){
       Serial.println("Wip it real good!");
     }
     rl.resetSeen();
-    return
+    return;
   }
   if ( (rl.GreySeen[0] && rl.BlackSeen[0]) && !rl.GreySeen[1]){
-    motor.turnLeft();
+    motors.turnLeft();
     rl.resetSeen();
     return;
   }
   if ( (rl.GreySeen[1] && rl.BlackSeen[1]) && !rl.GreySeen[0]){
-    motor.turnRight();
+    motors.turnRight();
     rl.resetSeen();
     return;
   }

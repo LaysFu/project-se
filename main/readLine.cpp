@@ -4,7 +4,7 @@
 #include "Motors.h"
 #include <Zumo32U4Buttons.h>
 
-readLine::readLine() : Green(1), index(0){
+readLine::readLine() : index(0){
   for (int i : leftAR) { leftAR[i] = 0; }
   for (int i : rightAR) { rightAR[i] = 0; }
 }
@@ -44,7 +44,7 @@ void readLine::calibrateLineSensors() {
 }
 
 uint16_t readLine::lineRider() {
-  return lineSensorPos.readLine(lineSensorPos);
+  return lineSensors.readLine(lineSensorPos);
 }
 
 void readLine::identifyColor() {
@@ -52,6 +52,7 @@ void readLine::identifyColor() {
   leftAR[index] = lineSensorValues[0];
   rightAR[index] = lineSensorValues[4];
   index++;
+  if (index > 50) { index = 0; }
 }
 
 void readLine::checkHistory(){
@@ -83,11 +84,20 @@ void readLine::inRangeCheck(int highL, int highR){
   if ( (highL-(Grey+RANGE))*(highL-(Grey-RANGE)) <= 0) { GreySeen[0] = true; }
   if ( (highR-(Grey+RANGE))*(highR-(Grey-RANGE)) <= 0) { GreySeen[1] = true; return; }
   if ( (highL-(Brown+RANGE))*(highL-(Brown-RANGE)) <= 0) { BrownSeen[0] = true; }
-  if ( (highR-(Brown+RANGE))*(highL-(Brown-RANGE)) <= 0) { throw; }
+  if ( (highR-(Brown+RANGE))*(highL-(Brown-RANGE)) <= 0) { BrownSeen[1] = true; }
 }
 
-void resetSeen(){
-  for (int i : GreySeen){
+bool readLine::checkBlack(){
+  lineSensors.readCalibrated(lineSensorValues);
+  return (lineSensorValues[2] == 1000);
+}
+
+int readLine::checkGreen(){
+  return (lineSensorValues[2] == 1000);
+}
+
+void readLine::resetSeen(){
+  for (auto i : GreySeen){
     GreySeen[i] = false;
     BrownSeen[i] = false;
     BlackSeen[i] = false;

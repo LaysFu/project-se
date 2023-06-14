@@ -4,8 +4,8 @@ ProxySensy::ProxySensy(){}
 
 void ProxySensy::readProxySensors(){
     read();
-    left_sensor = proxySensy.countsFrontWithLeftLeds();
-    right_sensor = proxySensy.countsFrontWithRightLeds();
+    left_sensor = countsFrontWithLeftLeds();
+    right_sensor = countsFrontWithRightLeds();
 };
 
 int ProxySensy::left(){

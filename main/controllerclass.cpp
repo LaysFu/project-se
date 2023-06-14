@@ -1,7 +1,5 @@
 #include "controllerclass.h"
 
-ControllerClass::ControllerClass(Buzzer& B) : player(B){}
-
 
 bool ControllerClass::Controller() {
         if (Serial1.available() > 0) {
@@ -26,10 +24,10 @@ bool ControllerClass::Controller() {
                     motor.bRight();
                     break;
                 case '5':
-                motor.leftAxis();
+                    //motor.leftAxis();
                     break;
                 case '6':
-                    motor.rightAxis();
+                    //motor.rightAxis();
                     break;        
                 case 'f':
                     player.playSong();

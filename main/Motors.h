@@ -13,29 +13,28 @@ class Motors : public Zumo32U4Motors {
 
         // Voor PID controller
         int calculateSpeedDifference(int);
-        void motorCalculations();
+        void motorCalculations(uint16_t);
 
     public:
-        Motors();
         ~Motors() = default;
 
         // PID controller
-        void setMotorSpeeds(int);
+        void setMotorSpeeds(int, uint16_t);
         // Grey bochten
         void turnLeft();
         void turnRight();
 
         // Handbediening
-        void forward() 
-        void backward()
-        void left() 
-        void right() 
-        void bLeft() 
-        void bRight() 
-        void stop() 
-        void playSong() 
-        void stopSong() 
-}
+        void forward();
+        void backward();
+        void left(); 
+        void right(); 
+        void bLeft(); 
+        void bRight(); 
+        void stop(); 
+        void playSong(); 
+        void stopSong(); 
+};
 
 #endif // MOTORS_Hclass ZumoMotors {
 

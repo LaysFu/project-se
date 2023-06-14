@@ -15,6 +15,6 @@ double Gyro::calculatePitch() {
 }
 
 bool Gyro::isPitchBelowZero() {
-  pitch = gyro.calculatePitch();
+  pitch = calculatePitch();
   return (pitch < 0);
 }

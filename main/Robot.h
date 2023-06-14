@@ -12,6 +12,10 @@ class Robot{
         readLine& rl;
         Buzzer player;
         Motors motor;
+        ControllerClass Cont;
+        LineFollower& LF;
+        Block& blocky;
+        
 
 
         bool gameOn; //start mainLoop
@@ -19,7 +23,7 @@ class Robot{
         bool setupDone;
 
     public:
-        Robot(readLine&);       
+        Robot(readLine&,LineFollower&, Block&);       
         void main();
   
 };

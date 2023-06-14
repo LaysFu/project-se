@@ -8,9 +8,9 @@ const char Buzzer::song[] PROGMEM =
   "db-gg16dd16aff16dd16aff16ccee16f16e16";
 
 void Buzzer::playSong() {
-    buzzer.playFromProgramSpace(Buzzer::song);
+    playFromProgramSpace(Buzzer::song);
 }
 
 void Buzzer::stopSong() {
-    buzzer.stopPlaying();
+    stopPlaying();
 }

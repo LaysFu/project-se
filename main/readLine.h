@@ -24,8 +24,6 @@ private:
   int leftAR[HISTORY], rightAR[HISTORY];
   // index voor array
   int index;
-  // Green voor speedlimit. 1 = not Green, 2 = Green
-  int Green;
   // calibrated colors
   int Grey, Brown, Black;
   // Voor timer
@@ -39,10 +37,12 @@ private:
 public:
   readLine();
   void identifyColor();
-  void lineRider();
+  uint16_t lineRider();
   void checkHistory();
   int checkGreen();
+  bool checkBlack();
   void setup();
+  void resetSeen();
 
   // seen colors
   bool GreySeen[2];

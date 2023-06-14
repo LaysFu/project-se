@@ -11,8 +11,9 @@ void setup()
 void loop()
 {
   readLine RL;
-  Robot Zumo(RL);
-  
-  RL.setup();
+  LineFollower LF(RL);
+  Block blocky(RL);
+  Robot Zumo(RL, LF, blocky);
+
   Zumo.main();
 }

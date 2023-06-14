@@ -1,24 +1,23 @@
 #include "Motors.h"
 
-Motors::Motors(){}
 
-void Motors::motorCalculations(){
-  	error = rl.position - 1500;
+void Motors::motorCalculations(uint16_t pos){
+  	error = pos - 1500;
 
     leftSpeed = maxSpeed + calculateSpeedDifference(error);
     rightSpeed = maxSpeed - calculateSpeedDifference(error);
     lastError = error;
 }
 
-void Motors::setMotorSpeeds(int i) {
-    motorCalculations();
+void Motors::setMotorSpeeds(int i, uint16_t pos) {
+    motorCalculations(pos);
 
     leftSpeed = constrain(leftSpeed, -200, maxSpeed);
     rightSpeed = constrain(rightSpeed, -200, maxSpeed);
-    motors.setSpeeds((leftSpeed/i), (rightSpeed/i));
+    setSpeeds((leftSpeed/i), (rightSpeed/i));
 }
 
-void Motors::calculateSpeedDifference(int error) {
+int Motors::calculateSpeedDifference(int error) {
     return error / 4 + 6 * (error - lastError);
 }
 
@@ -65,7 +64,7 @@ void Motors::stop() {
 }
 
 void Motors::playSong() {
-    buzzer.playFromProgramSpace(CrabRaveSong::song);
+    buzzer.playSong();
 }
 
 void Motors::stopSong() {

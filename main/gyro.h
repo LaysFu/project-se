@@ -7,11 +7,11 @@
 class Gyro {
   private:
     Zumo32U4IMU imu;
-    void init();
     double pitch;
     
   public:
     Gyro();
+    void init();
     double calculatePitch();
     bool isPitchBelowZero();
   
