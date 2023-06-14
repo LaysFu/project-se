@@ -4,7 +4,7 @@
 
 LineFollower::LineFollower(readLine& rl) : rl(rl){
   gyro.init(); // Initialize gyro
-  Serial.println("Linefollower created!");
+  // Serial.println("Linefollower created!");
 }
 
 bool LineFollower::followLine() {
@@ -12,10 +12,13 @@ bool LineFollower::followLine() {
 
     //try{
       rl.checkHistory(); // checkt per 1000ms History
+      Serial.println("History checked");
     //}
     //catch(...){// als dubbel bruin is gevonden .... (Werkt blijkbaar niet met arduino)
     if (rl.BrownSeen[0] && rl.BrownSeen[1]){
       Serial.println("Brown gevonden");
+      Serial.println(rl.BrownSeen[0]);
+      Serial.println(rl.BrownSeen[1]);
       motors.setSpeeds(200,200);
       delay(2000);
       motors.setSpeeds(0,0);

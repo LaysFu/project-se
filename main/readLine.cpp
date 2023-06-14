@@ -1,5 +1,5 @@
-// #include "HardwareSerial.h"
-// #include "USBAPI.h"
+#include "HardwareSerial.h"
+#include "USBAPI.h"
 #include "readLine.h"
 #include "Motors.h"
 #include <Zumo32U4Buttons.h>
@@ -10,22 +10,23 @@ readLine::readLine() : index(0){
 }
 
 void readLine::setup(){
+  Serial.println("Doing setup");
   // basic setup
   lineSensors.initFiveSensors();
   lineSensors.emittersOn();
-  Zumo32U4ButtonA bA;
-  Zumo32U4ButtonB bB;
+  // Zumo32U4ButtonA bA;
+  // Zumo32U4ButtonB bB;
 
   
   calibrateLineSensors();
   // calibrate all colors
-  bB.waitForButton();
-  Grey = (lineSensorValues[0] + lineSensorValues[4]) / 2;
-  bB.waitForButton();
-  Brown = (lineSensorValues[0] + lineSensorValues[4]) / 2;
-  bB.waitForButton();
-  Black = (lineSensorValues[0] + lineSensorValues[4]) / 2;
-  bA.waitForButton();
+  // bB.waitForButton();
+  // Grey = (lineSensorValues[0] + lineSensorValues[4]) / 2;
+  // bB.waitForButton();
+  // Brown = (lineSensorValues[0] + lineSensorValues[4]) / 2;
+  // bB.waitForButton();
+  // Black = (lineSensorValues[0] + lineSensorValues[4]) / 2;
+  // bA.waitForButton();
 }
 
 void readLine::calibrateLineSensors() {
