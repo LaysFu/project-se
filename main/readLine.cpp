@@ -7,31 +7,44 @@
 readLine::readLine() : index(0){
   for (int i : leftAR) { leftAR[i] = 0; }
   for (int i : rightAR) { rightAR[i] = 0; }
+  GreySeen[0] = false;
+  GreySeen[1]=false;
+
 }
 
 void readLine::setup(){
-  Serial.println("Doing setup");
   // basic setup
   lineSensors.initFiveSensors();
   lineSensors.emittersOn();
-  // Zumo32U4ButtonA bA;
-  // Zumo32U4ButtonB bB;
+  Zumo32U4ButtonA bA;
+  Zumo32U4ButtonB bB;
 
   
   calibrateLineSensors();
+
   // calibrate all colors
-  // bB.waitForButton();
-  // Grey = (lineSensorValues[0] + lineSensorValues[4]) / 2;
-  // bB.waitForButton();
-  // Brown = (lineSensorValues[0] + lineSensorValues[4]) / 2;
-  // bB.waitForButton();
-  // Black = (lineSensorValues[0] + lineSensorValues[4]) / 2;
-  // bA.waitForButton();
+  bB.waitForButton();
+  lineSensors.readCalibrated(lineSensorValues);
+  GreyL = lineSensorValues[0];
+  GreyR = lineSensorValues[4];
+  Serial1.print("Links: ");
+  Serial1.println(GreyL);
+  Serial1.print("Rechts: ");
+  Serial1.println(GreyR);
+  bB.waitForButton();
+  lineSensors.readCalibrated(lineSensorValues);
+  BrownL = lineSensorValues[0];
+  BrownR = lineSensorValues[4];
+  Serial1.print("Links: ");
+  Serial1.println(BrownL);
+  Serial1.print("Rechts: ");
+  Serial1.println(BrownR);
+  bA.waitForButton();
 }
 
 void readLine::calibrateLineSensors() {
   Motors motor;
-  Serial.println("Start calibrating!");
+  Serial1.println("Start calibrating!");
   delay(1000);
   for (uint16_t i = 0; i < 120; i++) {
     if (i > 30 && i <= 90) {
@@ -66,8 +79,8 @@ void readLine::checkHistory(){
     for (int i : leftAR) {
       if (highestLeft < leftAR[i]){ highestLeft = leftAR[i]; }
       if (highestRight < rightAR[i]){ highestRight = rightAR[i]; } 
-      Serial.println(" " + leftAR[i]);
-      Serial.println(" " + rightAR[i]);    
+      // Serial.println(" " + leftAR[i]);
+      // Serial.println(" " + rightAR[i]);    
     }
     inRangeCheck(highestLeft, highestRight);
   }
@@ -76,16 +89,22 @@ void readLine::checkHistory(){
 void readLine::inRangeCheck(int highL, int highR){
   if ( highL == 1000) { BlackSeen[0] = true; }
   if ( highR == 1000) { BlackSeen[1] = true; return; }
-  // if (highL >= (Grey-RANGE) && highL <= (Grey+RANGE)) { Grey[0] = true }
-  // if (highR >= (Grey-RANGE) && highL <= (Grey+RANGE)) { Grey[2] = true }
-  // if (highL >= (Brown-RANGE) && highL <= (Brown+RANGE)) { Brown[0] = true }
-  // if (highR >= (Brown-RANGE) && highL <= (Brown+RANGE)) { Brown[2] = true }
+  if (highL >= (GreyL-RANGE) && highL <= (GreyL+RANGE) && highR >= (GreyR-RANGE) && highR <= (GreyR+RANGE)) {
+    Serial1.println("SetGrey");
+    GreySeen[0] = true;
+    GreySeen[1] = true;
+    return;
+  }
+  if (highL >= (GreyL-RANGE) && highL <= (GreyL+RANGE)) { GreySeen[0] = true; GreySeen[1] = false;}
+  if (highR >= (GreyR-RANGE) && highR <= (GreyR+RANGE)) { GreySeen[1] = true; GreySeen[0] = false;}
+  if (highL >= (BrownL-RANGE) && highL <= (BrownL+RANGE)) { BrownSeen[0] = true; }
+  if (highR >= (BrownR-RANGE) && highR <= (BrownR+RANGE)) { BrownSeen[1] = true; }
 
   // als dit niet werkt weer naar bovenste gaan
-  if ( (highL-(Grey+RANGE))*(highL-(Grey-RANGE)) <= 0) { GreySeen[0] = true; }
-  if ( (highR-(Grey+RANGE))*(highR-(Grey-RANGE)) <= 0) { GreySeen[1] = true; return; }
-  if ( (highL-(Brown+RANGE))*(highL-(Brown-RANGE)) <= 0) { BrownSeen[0] = true; }
-  if ( (highR-(Brown+RANGE))*(highL-(Brown-RANGE)) <= 0) { BrownSeen[1] = true; }
+  // if ( (highL-(Grey+RANGE))*(highL-(Grey-RANGE)) <= 0) { GreySeen[0] = true; }
+  // if ( (highR-(Grey+RANGE))*(highR-(Grey-RANGE)) <= 0) { GreySeen[1] = true; return; }
+  // if ( (highL-(Brown+RANGE))*(highL-(Brown-RANGE)) <= 0) { BrownSeen[0] = true; }
+  // if ( (highR-(Brown+RANGE))*(highL-(Brown-RANGE)) <= 0) { BrownSeen[1] = true; }
 }
 
 bool readLine::checkBlack(){
@@ -94,7 +113,7 @@ bool readLine::checkBlack(){
 }
 
 int readLine::checkGreen(){
-  return (lineSensorValues[2] == 1000);
+  return (lineSensorValues[2] >= 100 && lineSensorValues[2] <= 200) ? 2 : 1;
 }
 
 void readLine::resetSeen(){

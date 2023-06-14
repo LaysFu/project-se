@@ -10,7 +10,7 @@ void Robot::main(){
     //     setupDone = Cont.Controller();
     // }
     if (!setupDone) { 
-        Serial.println("Doing setup");
+        Serial1.println("Doing setup");
         rl.setup(); 
         setupDone = true;
         gameOver = false;
@@ -19,7 +19,7 @@ void Robot::main(){
         while(gameOn){
             gameOn = LF.followLine();       
         }
-        if(!gameOn){
+        while(!gameOn){
             blocky.readProxy();
             blocky.findBlock();
             blocky.pushBlock();

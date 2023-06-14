@@ -8,8 +8,8 @@
 
 #define NUM_SENSORS 5 
 #define HISTORY 50
-#define RANGE 25 
-#define INTERVAL 1000
+#define RANGE 50 
+#define INTERVAL 50
 
 class readLine {
   
@@ -25,7 +25,8 @@ private:
   // index voor array
   int index;
   // calibrated colors
-  int Grey, Brown, Black;
+  int GreyL, BrownL, Black;
+  int GreyR, BrownR;
   // Voor timer
   unsigned long previousMillis = 0;
   // calibrate sensors, only at start of program

@@ -18,7 +18,7 @@ void Motors::setMotorSpeeds(int i, uint16_t pos) {
 }
 
 int Motors::calculateSpeedDifference(int error) {
-    return error / 4 + 6 * (error - lastError);
+    return error / 2 + 3 * (error - lastError);
 }
 
 void Motors::turnLeft() {
