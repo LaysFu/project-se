@@ -15,8 +15,8 @@ class Robot{
         ControllerClass Cont;
         LineFollower& LF;
         Block& blocky;
-        
 
+        void moveForward();
 
         bool gameOn; //start mainLoop
         bool gameOver; //stopt als gameOver

@@ -22,11 +22,13 @@ void readLine::setup(){
   bB.waitForButton();
   b.melodyOne();
   Grey = (lineSensorValues[0] + lineSensorValues[4]) / 2;
+  buzzer.melodyOne();
   bB.waitForButton();
   Brown = (lineSensorValues[0] + lineSensorValues[4]) / 2;
+  buzzer.melodyTwo();
   bB.waitForButton();
   Black = (lineSensorValues[0] + lineSensorValues[4]) / 2;
-  bA.waitForButton();
+  buzzer.melodyThree();
 }
 
 void readLine::calibrateLineSensors() {

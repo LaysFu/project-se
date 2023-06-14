@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <Arduino.h>
 #include <Zumo32U4LineSensors.h>
+#include "buzzer.h"
 
 
 #define NUM_SENSORS 5 
@@ -15,6 +16,7 @@ class readLine {
   
 private:
   Zumo32U4LineSensors lineSensors;
+  Buzzer buzzer;
   
   // arrays for color
   uint16_t lineSensorValues[NUM_SENSORS];

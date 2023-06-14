@@ -19,6 +19,10 @@ const char Buzzer::melThree[] PROGMEM =
   "! V10 O5 L8 T125"
   "dad";
 
+const char Buzzer::melFour[] PROGMEM =
+  "! V10 O5 L8 T125"
+  "da O6 L2 c";
+
 const char Buzzer::toneC[] PROGMEM =
   "! V10 O5 L8 T125"
   "c";
@@ -49,6 +53,10 @@ void Buzzer::melodyTwo() {
 
 void Buzzer::melodyThree() {
   playFromProgramSpace(Buzzer::melThree);
+}
+
+void Buzzer::melodyFour() {
+  playFromProgramSpace(Buzzer::melFour);
 }
 
 void Buzzer::C() {
