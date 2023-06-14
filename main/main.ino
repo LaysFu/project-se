@@ -10,8 +10,9 @@ void setup()
 
 void loop()
 {
-  Robot Zumo;
   readLine RL;
+  Robot Zumo(RL);
+  
   RL.setup();
   Zumo.main();
 }

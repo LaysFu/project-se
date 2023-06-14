@@ -4,17 +4,22 @@
 #include "readLine.h"
 #include "LineFollower.h"
 #include "Block.h"
+#include "buzzer.h"
+#include "controllerclass.h"
 
 class Robot{
     private:
+        readLine& rl;
+        Buzzer player;
+        Motors motor;
+
+
         bool gameOn; //start mainLoop
         bool gameOver; //stopt als gameOver
-        readLine RL;
-        LineFollower LF;
-        Block blocky
+        bool setupDone;
 
     public:
-        Robot();       
+        Robot(readLine&);       
         void main();
   
 };

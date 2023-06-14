@@ -7,12 +7,13 @@
 class LineFollower {
   private:
     readLine& rl;
+    Motors motors;
     Gyro gyro;
 
     uint16_t position;
 
   public:
-    LineFollower(readLine&);
+    LineFollower(readLine&, Motors&);
     void followLine();
     void checkGrey();   
 };

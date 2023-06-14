@@ -86,10 +86,6 @@ void readLine::inRangeCheck(int highL, int highR){
   if ( (highR-(Brown+RANGE))*(highL-(Brown-RANGE)) <= 0) { throw; }
 }
 
-int readLine::checkGreen(){
-  return (lineSensorValues[2] >= 100 && lineSensorValues[2] <= 200) ? 2 : 1;
-}
-
 void resetSeen(){
   for (int i : GreySeen){
     GreySeen[i] = false;

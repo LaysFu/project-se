@@ -2,10 +2,11 @@
 #define MOTORS_H
 
 #include <Zumo32U4Motors.h>
+#include "buzzer.h"
 
 class Motors : public Zumo32U4Motors {
     private: 
-        Zumo32U4Buzzer buzzer;
+        Buzzer buzzer;
         int error, lastError = 0;
         int leftSpeed, rightSpeed;
         const int maxSpeed = 350;

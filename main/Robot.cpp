@@ -1,10 +1,19 @@
 #include "Robot.h"
 
-Robot::Robot() : gameOn(false), gameOver(true){}
+Robot::Robot(readLine& rl) : rl(rl), gameOn(false), gameOver(true), setupDone(true){
+    LineFollower LF(rl);
+    ControllerClass CR(player);
+    Block blocky(rl);
+}
 
 void Robot::main(){
     if (gameOver){
-        Serial.println("Handbediening");
+        setupDone = CR.Controller();       
+    }
+    if (!setupDone) { 
+        rl.setup(); 
+        setupDone = true;
+        gameOver = false;
     }
     if (!gameOver){
         while(gameOn){
