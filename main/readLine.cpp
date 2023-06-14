@@ -20,6 +20,7 @@ void readLine::setup(){
   calibrateLineSensors();
   // calibrate all colors
   bB.waitForButton();
+  b.melodyOne();
   Grey = (lineSensorValues[0] + lineSensorValues[4]) / 2;
   bB.waitForButton();
   Brown = (lineSensorValues[0] + lineSensorValues[4]) / 2;
