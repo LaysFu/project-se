@@ -59,26 +59,32 @@ void Motors::left() {
     setSpeeds(50, 300);
 }
 
+//Functie om aan te roepen met de handbediening voor naar rechtsvoor rijden.
 void Motors::right() {
     setSpeeds(300, 50);
 }
 
+//Functie om aan te roepen met de handbediening voor naar linksachter rijden.
 void Motors::bLeft() {
     setSpeeds(-50, -300);
 }
 
+//Functie om aan te roepen met de handbediening voor naar rechtsachter rijden.
 void Motors::bRight() {
     setSpeeds(-300, -50);
 }
 
+//Functie die standaard wordt aangeroepen met de handbediening als er geen input wordt doorgegeven.
 void Motors::stop() {
     setSpeeds(0, 0);
 }
 
+//Functie om met de handbediening een muziekje af te spelen.
 void Motors::playSong() {
     buzzer.playSong();
 }
 
+//Functie om met de handbediening het muziekje te stoppen.
 void Motors::stopSong() {
     buzzer.stopPlaying();
 }
