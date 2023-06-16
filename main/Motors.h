@@ -37,7 +37,7 @@ class Motors : public Zumo32U4Motors {
         void stopSong(); 
 };
 
-#endif // MOTORS_Hclass ZumoMotors {
+#endif
 
 
 
