@@ -7,6 +7,7 @@
 
 class Buzzer : public Zumo32U4Buzzer{
 
+    //Declareren van alle functies en aangemaakte melodieen.
     public:
         void playSong();
         void stopSong();
