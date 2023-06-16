@@ -6,25 +6,26 @@
 
 class Motors : public Zumo32U4Motors {
     private: 
+        //Private attributen
         Buzzer buzzer;
         int error, lastError = 0;
         int leftSpeed, rightSpeed;
         const int maxSpeed = 350;
 
-        // Voor PID controller
+        //Declaraties voor PID controller
         int calculateSpeedDifference(int);
         void motorCalculations(uint16_t);
 
     public:
         ~Motors() = default;
 
-        // PID controller
+        //PID controller
         void setMotorSpeeds(int, uint16_t);
-        // Grey bochten
+        //Declaratie voor de bochten met grijs.
         void turnLeft();
         void turnRight();
 
-        // Handbediening
+        //Declaratie van de handbediening
         void forward();
         void backward();
         void left(); 
